@@ -83,6 +83,8 @@ test:
 #
 production:
   <<: *default
-  database: rails_to_riches_production
-  username: rails_to_riches
-  password: <%= ENV["RAILS_TO_RICHES_DATABASE_PASSWORD"] %>
+  database: <%= ENV['RDS_DB_NAME'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  port: <%= ENV['RDS_PORT'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
