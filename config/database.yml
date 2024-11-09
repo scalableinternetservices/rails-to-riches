@@ -80,6 +80,6 @@ test:
 #
 production:
   <<: *default
-  database: rails_to_riches_production
-  username: rails_to_riches
-  password: <%= ENV["RAILS_TO_RICHES_DATABASE_PASSWORD"] %>
+  host: <%= ENV.fetch("PGHOST") { "db" } %>
+  password: postgres
+  username: postgres
