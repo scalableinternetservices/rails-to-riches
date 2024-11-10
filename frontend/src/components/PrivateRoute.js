@@ -1,17 +1,12 @@
-import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { AuthContext } from './AuthContext';
+// src/components/PrivateRoute.js
+import React, { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
-function PrivateRoute({ component: Component, ...rest }) {
-  const { authTokens } = React.useContext(AuthContext);
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        authTokens ? <Component {...props} /> : <Redirect to="/login" />
-      }
-    />
-  );
+function PrivateRoute({ children }) {
+  const { authTokens } = useContext(AuthContext);
+
+  return authTokens ? children : <Navigate to="/login" replace />;
 }
 
 export default PrivateRoute;

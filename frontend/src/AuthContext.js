@@ -1,18 +1,32 @@
-import React, { createContext, useState } from 'react';
+// src/AuthContext.js
+import React, { createContext, useState, useEffect } from 'react';
+import { setAuthToken } from './services/api';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const existingTokens = JSON.parse(localStorage.getItem('tokens'));
-  const [authTokens, setAuthTokens] = useState(existingTokens);
+  const [authTokens, setAuthTokensState] = useState(() => {
+    const token = JSON.parse(localStorage.getItem('tokens'));
+    if (token) {
+      setAuthToken(token);
+    }
+    return token;
+  });
 
-  const setTokens = (data) => {
-    localStorage.setItem('tokens', JSON.stringify(data));
-    setAuthTokens(data);
+  const setAuthTokens = (data) => {
+    if (data) {
+      localStorage.setItem('tokens', JSON.stringify(data));
+      setAuthToken(data);
+      setAuthTokensState(data);
+    } else {
+      localStorage.removeItem('tokens');
+      setAuthToken(null);
+      setAuthTokensState(null);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
+    <AuthContext.Provider value={{ authTokens, setAuthTokens }}>
       {children}
     </AuthContext.Provider>
   );
