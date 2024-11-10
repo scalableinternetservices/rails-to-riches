@@ -8,6 +8,8 @@ gem "sprockets-rails"
 
 gem 'pg', '~> 1.5', '>= 1.5.4'
 
+gem 'jwt'
+
 # Check the latest supported [https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.ruby]
 gem "puma", ">= 5.0"
 
