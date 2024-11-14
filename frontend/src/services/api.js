@@ -1,7 +1,9 @@
 // src/services/api.js
 import axios from 'axios';
 
-axios.defaults.baseURL = process.env.REACT_APP_RAILS_ENDPOINT;
+if (process.env.REACT_APP_RAILS_ENDPOINT) {
+  axios.defaults.baseURL = process.env.REACT_APP_RAILS_ENDPOINT;
+}
 
 export const loginUser = (email, password) => {
   return axios.post('/api/v1/login', {
