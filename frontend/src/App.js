@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import PostDetail from './pages/PostDetail';
+import AddRestaurant from './pages/AddRestaurant';  // Import the new page
 import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/Navbar';
 
@@ -29,6 +30,14 @@ function App() {
           element={
             <PrivateRoute>
               <PostDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-restaurant"
+          element={
+            <PrivateRoute>
+              <AddRestaurant />
             </PrivateRoute>
           }
         />
