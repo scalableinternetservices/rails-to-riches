@@ -1,13 +1,14 @@
 // src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Profile from './pages/Profile';
-import PostDetail from './pages/PostDetail';
-import PrivateRoute from './components/PrivateRoute';
-import Navbar from './components/Navbar';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
+import Review from "./pages/Review";
+import PostDetail from "./pages/PostDetail";
+import PrivateRoute from "./components/PrivateRoute";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
             </PrivateRoute>
           }
         />
+        {/* Delete this route later */}
+        <Route path="/review" element={<Review />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </Router>
