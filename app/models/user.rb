@@ -1,13 +1,10 @@
-
 class User < ApplicationRecord
-    has_secure_password
-    has_one :profile
-    has_many :posts
-    has_many :comments
-    has_many :sent_messages, class_name: 'Message', foreign_key: 'sender_id'
-    has_many :received_messages, class_name: 'Message', foreign_key: 'receiver_id'
-  
-    validates :email, presence: true, uniqueness: true
-    validates :password, confirmation: true
+  has_secure_password
+  has_many :review
+  has_many :comment
+  has_many :restaurant, foreign_key: 'user_id'
+
+  def business_owner?
+    role == 'business_owner'
   end
-  
+end

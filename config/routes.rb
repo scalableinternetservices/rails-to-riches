@@ -1,14 +1,14 @@
 Rails.application.routes.draw do
   namespace :api do
-    namespace :v1 do
-      resources :users, only: [:create, :show]
-      resources :profiles, only: [:show, :update]
-      resources :posts do
-        resources :comments, only: [:create, :index]
-      end
-      resources :messages, only: [:create, :index]
-      post 'login', to: 'sessions#create'
-      get 'logout', to: 'sessions#destroy'
+    resources :users, only: [:index, :show, :create, :update, :destroy]
+    resources :restaurants do
+      resources :reviews, only: [:index, :create]
+      resources :photos, only: [:index, :create]
     end
+    resources :reviews, only: [:show, :update, :destroy] do
+      resources :comments, only: [:index, :create]
+    end
+    resources :comments, only: [:show, :update, :destroy]
+    resources :photos, only: [:show, :destroy]
   end
 end
