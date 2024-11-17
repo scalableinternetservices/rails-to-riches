@@ -29,6 +29,7 @@ function Login() {
 
     try {
       const response = await loginUser(email, password);
+      console.log(response)
       if (response.status === 200) {
         setAuthTokens(response.data.jwt);
         navigate('/');

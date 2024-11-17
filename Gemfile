@@ -27,6 +27,8 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 gem "bootsnap", require: false
 
+gem 'dotenv-rails', require: 'dotenv/load'
+
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
 end

@@ -1,7 +1,7 @@
 // src/pages/Signup.js
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../AuthContext';
-import { signupUser } from '../services/api'; // You'll create this function
+import { signupUser } from '../services/api';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 import Avatar from '@mui/material/Avatar';
@@ -24,17 +24,19 @@ function Signup() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    const name = data.get('name');
     const email = data.get('email');
     const password = data.get('password');
     const passwordConfirmation = data.get('passwordConfirmation');
+    const role = data.get('role') || 'user'; // Default role
 
     if (password !== passwordConfirmation) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return;
     }
 
     try {
-      const response = await signupUser(email, password);
+      const response = await signupUser(name, email, password, passwordConfirmation, role);
       if (response.status === 201) {
         setAuthTokens(response.data.jwt);
         navigate('/');
@@ -72,11 +74,22 @@ function Signup() {
               margin="normal"
               required
               fullWidth
+              id="name"
+              label="Full Name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              color="primary"
+              variant="outlined"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
               color="primary"
               variant="outlined"
             />
@@ -104,6 +117,25 @@ function Signup() {
               color="primary"
               variant="outlined"
             />
+            {/* Optional: Role Selection */}
+            {/* 
+            <TextField
+              margin="normal"
+              fullWidth
+              select
+              id="role"
+              label="Role"
+              name="role"
+              SelectProps={{
+                native: true,
+              }}
+              color="primary"
+              variant="outlined"
+            >
+              <option value="user">User</option>
+              <option value="business_owner">Business Owner</option>
+            </TextField>
+            */}
             <Button
               type="submit"
               fullWidth
@@ -123,7 +155,7 @@ function Signup() {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link component={RouterLink} to="/login" variant="body2" sx={{ color: 'secondary.main' }}>
-                  {"Already have an account? Sign In"}
+                  {'Already have an account? Sign In'}
                 </Link>
               </Grid>
             </Grid>
