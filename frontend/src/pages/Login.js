@@ -19,24 +19,59 @@ function Login() {
   const navigate = useNavigate();
   const { setAuthTokens } = useContext(AuthContext);
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // To prevent multiple submissions
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null); // Reset any existing errors
+
     const data = new FormData(event.currentTarget);
 
     const email = data.get('email');
     const password = data.get('password');
 
+    // **Log the collected form data**
+    console.log('Collected Login Data:', { email, password });
+
+    // Prepare the payload
+    const payload = { 
+      email, 
+      password 
+    };
+
+    // **Log the payload being sent to the backend**
+    console.log('Payload Sent to Backend:', { user: payload });
+
+    setIsSubmitting(true); // Disable the submit button
+
     try {
       const response = await loginUser(email, password);
+      // **Log the response from the backend**
+      console.log('Login Response:', response);
+
       if (response.status === 200) {
-        setAuthTokens(response.data.jwt);
-        navigate('/');
+        setAuthTokens(response.data.jwt); // Store the JWT token
+        navigate('/'); // Navigate to the home page
       } else {
-        setError('Invalid credentials');
+        setError('Login failed');
       }
     } catch (error) {
-      setError('Invalid credentials');
+      // **Log the error response from the backend**
+      console.error('Login Error:', error);
+
+      if (error.response && error.response.data) {
+        if (error.response.data.errors) {
+          setError(error.response.data.errors.join(', '));
+        } else if (error.response.data.error) {
+          setError(error.response.data.error);
+        } else {
+          setError('Login failed');
+        }
+      } else {
+        setError('Login failed');
+      }
+    } finally {
+      setIsSubmitting(false); // Re-enable the submit button
     }
   };
 
@@ -62,6 +97,7 @@ function Login() {
             </Typography>
           )}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            {/* Email Field */}
             <TextField
               margin="normal"
               required
@@ -74,6 +110,7 @@ function Login() {
               color="primary"
               variant="outlined"
             />
+            {/* Password Field */}
             <TextField
               margin="normal"
               required
@@ -90,6 +127,7 @@ function Login() {
               type="submit"
               fullWidth
               variant="contained"
+              disabled={isSubmitting} // Disable button while submitting
               sx={{
                 mt: 3,
                 mb: 2,
@@ -100,7 +138,7 @@ function Login() {
                 },
               }}
             >
-              Sign In
+              {isSubmitting ? 'Signing In...' : 'Sign In'}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>

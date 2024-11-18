@@ -1,7 +1,6 @@
-// src/pages/Signup.js
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../AuthContext';
-import { signupUser } from '../services/api'; // You'll create this function
+import { signupUser } from '../services/api';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 import Avatar from '@mui/material/Avatar';
@@ -14,35 +13,90 @@ import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import MenuItem from '@mui/material/MenuItem'; 
+import FormControl from '@mui/material/FormControl'; 
+import InputLabel from '@mui/material/InputLabel'; 
+import Select from '@mui/material/Select';
 
 function Signup() {
   const navigate = useNavigate();
   const { setAuthTokens } = useContext(AuthContext);
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+
+  const roles = [
+    { value: 'business_owner', label: 'Business Owner' },
+    { value: 'customer', label: 'Customer' },
+  ];
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null);
     const data = new FormData(event.currentTarget);
 
+    const name = data.get('name');
     const email = data.get('email');
     const password = data.get('password');
     const passwordConfirmation = data.get('passwordConfirmation');
+    const role = data.get('role');
+
+    console.log('Collected Form Data:', {
+      name,
+      email,
+      password,
+      passwordConfirmation,
+      role,
+    });
+
+    if (!name || !email || !password || !passwordConfirmation || !role) {
+      setError("All fields are required");
+      return;
+    }
 
     if (password !== passwordConfirmation) {
       setError("Passwords do not match");
       return;
     }
 
+    const payload = { 
+      name, 
+      email, 
+      password, 
+      password_confirmation: passwordConfirmation, 
+      role 
+    };
+
+    console.log('Payload Sent to Backend:', { user: payload });
+
+    setIsSubmitting(true); 
     try {
-      const response = await signupUser(email, password);
+      const response = await signupUser(payload);
+      console.log('Signup Response:', response);
+
       if (response.status === 201) {
-        setAuthTokens(response.data.jwt);
-        navigate('/');
+        const tokens = response.data.jwt;
+        const userData = response.data.user;
+        setAuthTokens(tokens, userData); 
+        navigate('/'); 
       } else {
         setError('Signup failed');
       }
     } catch (error) {
-      setError('Signup failed');
+      console.error('Signup Error:', error);
+
+      if (error.response && error.response.data) {
+        if (error.response.data.errors) {
+          setError(error.response.data.errors.join(', '));
+        } else if (error.response.data.error) {
+          setError(error.response.data.error);
+        } else {
+          setError('Signup failed');
+        }
+      } else {
+        setError('Signup failed');
+      }
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
@@ -68,6 +122,20 @@ function Signup() {
             </Typography>
           )}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            {/* Name Field */}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Full Name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              color="primary"
+              variant="outlined"
+            />
+            {/* Email Field */}
             <TextField
               margin="normal"
               required
@@ -76,10 +144,10 @@ function Signup() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
               color="primary"
               variant="outlined"
             />
+            {/* Password Field */}
             <TextField
               margin="normal"
               required
@@ -92,6 +160,7 @@ function Signup() {
               color="primary"
               variant="outlined"
             />
+            {/* Confirm Password Field */}
             <TextField
               margin="normal"
               required
@@ -104,10 +173,28 @@ function Signup() {
               color="primary"
               variant="outlined"
             />
+            {/* Role Dropdown */}
+            <FormControl fullWidth margin="normal" required>
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role"
+                name="role"
+                label="Role"
+                defaultValue="" // Ensure no default selection
+              >
+                {roles.map((roleOption) => (
+                  <MenuItem key={roleOption.value} value={roleOption.value}>
+                    {roleOption.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              disabled={isSubmitting} // Disable button while submitting
               sx={{
                 mt: 3,
                 mb: 2,
@@ -118,7 +205,7 @@ function Signup() {
                 },
               }}
             >
-              Sign Up
+              {isSubmitting ? 'Signing Up...' : 'Sign Up'}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>

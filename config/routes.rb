@@ -1,6 +1,12 @@
+# config/routes.rb
 Rails.application.routes.draw do
+  match '*all', to: proc { [204, {}, ['']] }, via: :options
   namespace :api do
-    resources :users, only: [:index, :show, :create, :update, :destroy]
+    post '/login', to: 'authentication#login'
+    post '/signup', to: 'authentication#signup'
+    get '/me', to: 'authentication#me'
+    
+    resources :users, only: [:index, :show, :update, :destroy]
     resources :restaurants do
       resources :reviews, only: [:index, :create]
       resources :photos, only: [:index, :create]
