@@ -1,37 +1,53 @@
 // src/components/Navbar.js
 import React, { useContext } from 'react';
 import { AuthContext } from '../AuthContext';
-import LogoutButton from './LogoutButton';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
+import { AppBar, Toolbar, Button, Typography, Box, Tooltip } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import NavbarLogo from './NavbarLogo';
 
 function Navbar() {
-  const { user } = useContext(AuthContext);
+  const { user, handleLogout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const logout = () => {
+    handleLogout();
+    navigate('/login');
+  };
+
+  if (!user) {
+    return null;
+  }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2, bgcolor: 'primary.main' }}>
-      <Link component={RouterLink} to="/" color="inherit" underline="none">
-        Home
-      </Link>
-      {user ? (
-        <>
-          <Link component={RouterLink} to="/profile" color="inherit" underline="none" sx={{ mr: 2 }}>
-            Profile
-          </Link>
-          <LogoutButton />
-        </>
-      ) : (
-        <>
-          <Link component={RouterLink} to="/login" color="inherit" underline="none" sx={{ mr: 2 }}>
-            Login
-          </Link>
-          <Link component={RouterLink} to="/signup" color="inherit" underline="none">
-            Sign Up
-          </Link>
-        </>
-      )}
-    </Box>
+    <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
+      <Toolbar>
+        {/* Logo */}
+        <NavbarLogo width={70} height={70} />
+
+        {/* Spacer to push the Logout button to the far right */}
+        <Box sx={{ flexGrow: 1 }} />
+
+        {/* Logout Button */}
+        <Tooltip title="Logout">
+          <Button
+            color="secondary"
+            onClick={logout}
+            sx={{
+              bgcolor: 'primary.main',
+              color: 'error.contrastText',
+              minWidth: 'auto', // Remove minimum width to fit the icon snugly
+              padding: 1, // Adjust padding as needed
+              '&:hover': {
+                bgcolor: 'error.dark',
+              },
+            }}
+          >
+            <LogoutIcon />
+          </Button>
+        </Tooltip>
+      </Toolbar>
+    </AppBar>
   );
 }
 

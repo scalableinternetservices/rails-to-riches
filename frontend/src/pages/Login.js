@@ -10,10 +10,10 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import Logo from '../components/Logo'; // Import the Logo component
 
 function Login() {
   const navigate = useNavigate();
@@ -50,8 +50,10 @@ function Login() {
       console.log('Login Response:', response);
 
       if (response.status === 200) {
-        setAuthTokens(response.data.jwt); // Store the JWT token
-        navigate('/'); // Navigate to the home page
+        const tokens = response.data.jwt;
+        const userData = response.data.user;
+        setAuthTokens(tokens, userData); // Set tokens and user data
+        navigate('/'); // Navigate to home page
       } else {
         setError('Login failed');
       }
@@ -85,11 +87,11 @@ function Login() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          {/* Logo */}
+          <Logo width={100} height={100} />
+
           <Typography component="h1" variant="h5" color="primary.dark">
-            Sign in
+            Sign In
           </Typography>
           {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
@@ -132,7 +134,7 @@ function Login() {
                 mt: 3,
                 mb: 2,
                 bgcolor: 'primary.main',
-                color: 'white',
+                color: 'error.contrastText', // To match Button Text Color
                 '&:hover': {
                   bgcolor: 'primary.dark',
                 },
@@ -143,7 +145,7 @@ function Login() {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link component={RouterLink} to="/signup" variant="body2" sx={{ color: 'secondary.main' }}>
-                  {"Don't have an account? Sign Up"}
+                  {"Not joined yet? Sign Up"}
                 </Link>
               </Grid>
             </Grid>

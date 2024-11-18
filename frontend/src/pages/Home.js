@@ -1,15 +1,33 @@
 // src/pages/Home.js
-import React from 'react';
-import { Container, Typography } from '@mui/material';
+import React, { useContext } from 'react';
+import { AuthContext } from '../AuthContext';
+import { Typography, Box, Container } from '@mui/material';
 
-const Home = () => {
+function Home() {
+  const { user } = useContext(AuthContext);
+
   return (
-    <Container>
-      <Typography variant="h4" color="primary.main" sx={{ mt: 4 }}>
-        Welcome to the Home Page
-      </Typography>
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
+      <Box
+        sx={{
+          bgcolor: 'background.default',
+          p: 4,
+          borderRadius: 2,
+          boxShadow: 3,
+          textAlign: 'center',
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {user ? `Welcome, ${user.name}!` : 'Welcome!'}
+        </Typography>
+        <Typography variant="body1">
+          {user
+            ? 'Thank you for logging in. Enjoy your stay!'
+            : 'Please log in or sign up to continue.'}
+        </Typography>
+      </Box>
     </Container>
   );
-};
+}
 
 export default Home;

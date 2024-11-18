@@ -8,7 +8,12 @@ module Api
         token = encode_token(user_id: @user.id)
         render json: { jwt: token, user: user_response(@user) }, status: :created
       else
-        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+        # Check if the error is related to email uniqueness
+        if @user.errors[:email].include?('has already been taken')
+          render json: { errors: ['This email is already registered. Please use a different email.'] }, status: :unprocessable_entity
+        else
+          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+        end
       end
     end
 

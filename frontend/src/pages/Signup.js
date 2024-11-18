@@ -1,3 +1,4 @@
+// src/pages/Signup.js
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../AuthContext';
 import { signupUser } from '../services/api';
@@ -7,23 +8,34 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
+import MenuItem from '@mui/material/MenuItem'; // Import MenuItem for dropdown
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import MenuItem from '@mui/material/MenuItem'; 
-import FormControl from '@mui/material/FormControl'; 
-import InputLabel from '@mui/material/InputLabel'; 
-import Select from '@mui/material/Select';
+import Logo from '../components/Logo'; // Import the Logo component
+
+// Import MUI Dialog Components
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Signup() {
   const navigate = useNavigate();
   const { setAuthTokens } = useContext(AuthContext);
   const [error, setError] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [isSubmitting, setIsSubmitting] = useState(false); // To prevent multiple submissions
 
+  // Dialog state
+  const [openDialog, setOpenDialog] = useState(false);
+
+  // Define the roles array
   const roles = [
     { value: 'business_owner', label: 'Business Owner' },
     { value: 'customer', label: 'Customer' },
@@ -31,15 +43,17 @@ function Signup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null);
+    setError(null); // Reset any existing errors
+
     const data = new FormData(event.currentTarget);
 
     const name = data.get('name');
     const email = data.get('email');
     const password = data.get('password');
     const passwordConfirmation = data.get('passwordConfirmation');
-    const role = data.get('role');
+    const role = data.get('role'); // Retrieve the selected role
 
+    // **Log the collected form data**
     console.log('Collected Form Data:', {
       name,
       email,
@@ -48,16 +62,21 @@ function Signup() {
       role,
     });
 
-    if (!name || !email || !password || !passwordConfirmation || !role) {
-      setError("All fields are required");
+    // **Password Validation: Minimum 8 characters and at least one letter**
+    const passwordRegex = /^(?=.*[A-Za-z]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError("Password must be at least 8 characters long and include at least one letter.");
+      setOpenDialog(true); // Open the error dialog
       return;
     }
 
     if (password !== passwordConfirmation) {
       setError("Passwords do not match");
+      setOpenDialog(true); // Open the error dialog
       return;
     }
 
+    // Prepare the payload
     const payload = { 
       name, 
       email, 
@@ -66,43 +85,44 @@ function Signup() {
       role 
     };
 
+    // **Log the payload being sent to the backend**
     console.log('Payload Sent to Backend:', { user: payload });
 
-    setIsSubmitting(true); 
+    setIsSubmitting(true); // Disable the submit button
+
     try {
       const response = await signupUser(payload);
+      // **Log the response from the backend**
       console.log('Signup Response:', response);
 
       if (response.status === 201) {
         const tokens = response.data.jwt;
         const userData = response.data.user;
-        setAuthTokens(tokens, userData); 
-        navigate('/'); 
+        setAuthTokens(tokens, userData); // Set tokens and user data
+        navigate('/'); // Navigate to home page
       } else {
-        setError('Signup failed');
+        setError('You already have an account, or your connection is lost.');
+        setOpenDialog(true); // Open the error dialog
       }
     } catch (error) {
+      // **Log the error response from the backend**
       console.error('Signup Error:', error);
-
-      if (error.response && error.response.data) {
-        if (error.response.data.errors) {
-          setError(error.response.data.errors.join(', '));
-        } else if (error.response.data.error) {
-          setError(error.response.data.error);
-        } else {
-          setError('Signup failed');
-        }
-      } else {
-        setError('Signup failed');
-      }
+      setError('You already have an account, or your connection is lost.');
+      setOpenDialog(true); // Open the error dialog
     } finally {
-      setIsSubmitting(false); 
+      setIsSubmitting(false); // Re-enable the submit button
     }
   };
 
+  // Handle dialog close
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setError(null);
+  };
+
   return (
-    <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
-      <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
+    <Container component="main" maxWidth="xs" sx={{ mt:8}}>
+      <Paper elevation={3} sx={{ padding: 4, borderRadius: 2}}>
         <Box
           sx={{
             display: 'flex',
@@ -110,17 +130,48 @@ function Signup() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <PersonAddOutlinedIcon />
-          </Avatar>
+          {/* Logo */}
+          <Logo width={100} height={100} />
+
+          {/* Icon */}
           <Typography component="h1" variant="h5" color="primary.dark">
             Sign Up
           </Typography>
-          {error && (
-            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              {error}
-            </Typography>
-          )}
+
+          {/* Error Dialog */}
+          <Dialog
+            open={openDialog}
+            onClose={handleCloseDialog}
+            aria-labelledby="error-dialog-title"
+            aria-describedby="error-dialog-description"
+          >
+            <DialogTitle id="error-dialog-title">
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="h6">Error</Typography>
+                <IconButton
+                  aria-label="close"
+                  onClick={handleCloseDialog}
+                  sx={{
+                    color: (theme) => theme.palette.grey[500],
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="error-dialog-description">
+                {error}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} autoFocus>
+                OK
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Form */}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             {/* Name Field */}
             <TextField
@@ -174,22 +225,23 @@ function Signup() {
               variant="outlined"
             />
             {/* Role Dropdown */}
-            <FormControl fullWidth margin="normal" required>
-              <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role"
-                name="role"
-                label="Role"
-                defaultValue="" // Ensure no default selection
-              >
-                {roles.map((roleOption) => (
-                  <MenuItem key={roleOption.value} value={roleOption.value}>
-                    {roleOption.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TextField
+              select
+              label="Role"
+              name="role"
+              required
+              fullWidth
+              variant="outlined"
+              margin="normal"
+              defaultValue="customer" // Sets 'Customer' as the default selected role
+              color="primary"
+            >
+              {roles.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
             <Button
               type="submit"
               fullWidth
@@ -198,10 +250,10 @@ function Signup() {
               sx={{
                 mt: 3,
                 mb: 2,
-                bgcolor: 'secondary.main',
-                color: 'white',
+                bgcolor: 'primary.main',
+                color: 'error.contrastText', // To match Button Text Color
                 '&:hover': {
-                  bgcolor: 'secondary.dark',
+                  bgcolor: 'primary.dark',
                 },
               }}
             >
