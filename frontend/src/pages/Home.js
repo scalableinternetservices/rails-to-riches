@@ -2,7 +2,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import { Typography, Box, Container } from "@mui/material";
-import Review from "./Review";
 
 function Home() {
   const { user } = useContext(AuthContext);

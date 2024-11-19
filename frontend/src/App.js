@@ -5,7 +5,6 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
-import Review from "./pages/Review";
 import PostDetail from "./pages/PostDetail";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
@@ -24,9 +23,6 @@ function App() {
             </PrivateRoute>
           }
         />
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
         <Route
           path="/profile"
           element={
@@ -43,10 +39,10 @@ function App() {
             </PrivateRoute>
           }
         />
-        {/* Delete this route later */}
-        <Route path="/review" element={<Review />} />
-        <Route path="/" element={<Home />} />
-        {/* Add other routes as needed */}
+
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );
