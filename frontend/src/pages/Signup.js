@@ -1,30 +1,28 @@
 // src/pages/Signup.js
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../AuthContext';
-import { signupUser } from '../services/api';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../AuthContext";
+import { signupUser } from "../services/api";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import MenuItem from '@mui/material/MenuItem'; // Import MenuItem for dropdown
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import Logo from '../components/Logo'; // Import the Logo component
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import MenuItem from "@mui/material/MenuItem"; // Import MenuItem for dropdown
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import Logo from "../components/Logo"; // Import the Logo component
 
 // Import MUI Dialog Components
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 function Signup() {
   const navigate = useNavigate();
@@ -37,8 +35,8 @@ function Signup() {
 
   // Define the roles array
   const roles = [
-    { value: 'business_owner', label: 'Business Owner' },
-    { value: 'customer', label: 'Customer' },
+    { value: "business_owner", label: "Business Owner" },
+    { value: "customer", label: "Customer" },
   ];
 
   const handleSubmit = async (event) => {
@@ -47,14 +45,14 @@ function Signup() {
 
     const data = new FormData(event.currentTarget);
 
-    const name = data.get('name');
-    const email = data.get('email');
-    const password = data.get('password');
-    const passwordConfirmation = data.get('passwordConfirmation');
-    const role = data.get('role'); // Retrieve the selected role
+    const name = data.get("name");
+    const email = data.get("email");
+    const password = data.get("password");
+    const passwordConfirmation = data.get("passwordConfirmation");
+    const role = data.get("role"); // Retrieve the selected role
 
     // **Log the collected form data**
-    console.log('Collected Form Data:', {
+    console.log("Collected Form Data:", {
       name,
       email,
       password,
@@ -65,7 +63,9 @@ function Signup() {
     // **Password Validation: Minimum 8 characters and at least one letter**
     const passwordRegex = /^(?=.*[A-Za-z]).{8,}$/;
     if (!passwordRegex.test(password)) {
-      setError("Password must be at least 8 characters long and include at least one letter.");
+      setError(
+        "Password must be at least 8 characters long and include at least one letter."
+      );
       setOpenDialog(true); // Open the error dialog
       return;
     }
@@ -77,37 +77,37 @@ function Signup() {
     }
 
     // Prepare the payload
-    const payload = { 
-      name, 
-      email, 
-      password, 
-      password_confirmation: passwordConfirmation, 
-      role 
+    const payload = {
+      name,
+      email,
+      password,
+      password_confirmation: passwordConfirmation,
+      role,
     };
 
     // **Log the payload being sent to the backend**
-    console.log('Payload Sent to Backend:', { user: payload });
+    console.log("Payload Sent to Backend:", { user: payload });
 
     setIsSubmitting(true); // Disable the submit button
 
     try {
       const response = await signupUser(payload);
       // **Log the response from the backend**
-      console.log('Signup Response:', response);
+      console.log("Signup Response:", response);
 
       if (response.status === 201) {
         const tokens = response.data.jwt;
         const userData = response.data.user;
         setAuthTokens(tokens, userData); // Set tokens and user data
-        navigate('/'); // Navigate to home page
+        navigate("/"); // Navigate to home page
       } else {
-        setError('You already have an account, or your connection is lost.');
+        setError("You already have an account, or your connection is lost.");
         setOpenDialog(true); // Open the error dialog
       }
     } catch (error) {
       // **Log the error response from the backend**
-      console.error('Signup Error:', error);
-      setError('You already have an account, or your connection is lost.');
+      console.error("Signup Error:", error);
+      setError("You already have an account, or your connection is lost.");
       setOpenDialog(true); // Open the error dialog
     } finally {
       setIsSubmitting(false); // Re-enable the submit button
@@ -121,13 +121,13 @@ function Signup() {
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ mt:8}}>
-      <Paper elevation={3} sx={{ padding: 4, borderRadius: 2}}>
+    <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
+      <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           {/* Logo */}
@@ -146,7 +146,13 @@ function Signup() {
             aria-describedby="error-dialog-description"
           >
             <DialogTitle id="error-dialog-title">
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Typography variant="h6">Error</Typography>
                 <IconButton
                   aria-label="close"
@@ -172,7 +178,12 @@ function Signup() {
           </Dialog>
 
           {/* Form */}
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             {/* Name Field */}
             <TextField
               margin="normal"
@@ -250,18 +261,23 @@ function Signup() {
               sx={{
                 mt: 3,
                 mb: 2,
-                bgcolor: 'primary.main',
-                color: 'error.contrastText', // To match Button Text Color
-                '&:hover': {
-                  bgcolor: 'primary.dark',
+                bgcolor: "primary.main",
+                color: "error.contrastText", // To match Button Text Color
+                "&:hover": {
+                  bgcolor: "primary.dark",
                 },
               }}
             >
-              {isSubmitting ? 'Signing Up...' : 'Sign Up'}
+              {isSubmitting ? "Signing Up..." : "Sign Up"}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link component={RouterLink} to="/login" variant="body2" sx={{ color: 'secondary.main' }}>
+                <Link
+                  component={RouterLink}
+                  to="/login"
+                  variant="body2"
+                  sx={{ color: "secondary.main" }}
+                >
                   {"Already have an account? Sign In"}
                 </Link>
               </Grid>
