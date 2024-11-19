@@ -1,18 +1,19 @@
 // src/components/Logo.js
-import React from 'react';
-import { Box } from '@mui/material';
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-function NavbarLogo({ width = 50, height = 50 }) {
+function NavbarLogo({ width = 80, height = 42 }) {
   return (
-    <Box
-      component="img"
-      src="https://i.hizliresim.com/osre0t5.jpg"
-      alt="navbarlogo"
-      sx={{
-        width: width,
-        height: height,
-        objectFit: 'contain',
-      }}
+    <NavLink
+      to="/"
+      children={
+        <img
+          src="https://i.hizliresim.com/osre0t5.jpg"
+          alt="Gaucho Eats Logo"
+          width={width}
+          height={height}
+        />
+      }
     />
   );
 }

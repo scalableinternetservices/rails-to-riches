@@ -2,28 +2,27 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import { Typography, Box, Container } from "@mui/material";
+import Review from "./Review";
 
 function Home() {
   const { user } = useContext(AuthContext);
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
+    <Container maxWidth="xl" sx={{ mt: 4 }}>
       <Box
         sx={{
           bgcolor: "background.default",
-          p: 4,
+          p: 2,
           borderRadius: 2,
           boxShadow: 3,
           textAlign: "center",
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h6">
           {user ? `Welcome, ${user.name}!` : "Welcome!"}
         </Typography>
         <Typography variant="body1">
-          {user
-            ? "Thank you for logging in. Enjoy your stay!"
-            : "Please log in or sign up to continue."}
+          # placeholder for home component
         </Typography>
       </Box>
     </Container>

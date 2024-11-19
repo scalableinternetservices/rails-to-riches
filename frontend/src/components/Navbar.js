@@ -1,10 +1,11 @@
 // src/components/Navbar.js
-import React, { useContext } from 'react';
-import { AuthContext } from '../AuthContext';
-import { AppBar, Toolbar, Button, Typography, Box, Tooltip } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import NavbarLogo from './NavbarLogo';
+import React, { useContext } from "react";
+import { AuthContext } from "../AuthContext";
+import { AppBar, Toolbar, Button, Tooltip, Box } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useNavigate, Link } from "react-router-dom";
+import NavbarLogo from "./NavbarLogo";
 
 function Navbar() {
   const { user, handleLogout } = useContext(AuthContext);
@@ -12,7 +13,7 @@ function Navbar() {
 
   const logout = () => {
     handleLogout();
-    navigate('/login');
+    navigate("/login");
   };
 
   if (!user) {
@@ -20,32 +21,50 @@ function Navbar() {
   }
 
   return (
-    <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
+    <AppBar position="static" sx={{ bgcolor: "primary.main" }}>
       <Toolbar>
         {/* Logo */}
-        <NavbarLogo width={70} height={70} />
+        <NavbarLogo />
 
-        {/* Spacer to push the Logout button to the far right */}
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ marginLeft: "auto" }}>
+          <Tooltip title="Profile">
+            <Button
+              color="secondary"
+              component={Link}
+              to="/profile"
+              sx={{
+                bgcolor: "primary.main",
+                color: "error.contrastText",
+                minWidth: "auto", // Remove minimum width to fit the icon snugly
+                padding: 1, // Adjust padding as needed
+                "&:hover": {
+                  bgcolor: "error.dark",
+                },
+              }}
+            >
+              <AccountCircleIcon />
+            </Button>
+          </Tooltip>
 
-        {/* Logout Button */}
-        <Tooltip title="Logout">
-          <Button
-            color="secondary"
-            onClick={logout}
-            sx={{
-              bgcolor: 'primary.main',
-              color: 'error.contrastText',
-              minWidth: 'auto', // Remove minimum width to fit the icon snugly
-              padding: 1, // Adjust padding as needed
-              '&:hover': {
-                bgcolor: 'error.dark',
-              },
-            }}
-          >
-            <LogoutIcon />
-          </Button>
-        </Tooltip>
+          {/* Logout Button */}
+          <Tooltip title="Logout">
+            <Button
+              color="secondary"
+              onClick={logout}
+              sx={{
+                bgcolor: "primary.main",
+                color: "error.contrastText",
+                minWidth: "auto", // Remove minimum width to fit the icon snugly
+                padding: 1, // Adjust padding as needed
+                "&:hover": {
+                  bgcolor: "error.dark",
+                },
+              }}
+            >
+              <LogoutIcon />
+            </Button>
+          </Tooltip>
+        </Box>
       </Toolbar>
     </AppBar>
   );
