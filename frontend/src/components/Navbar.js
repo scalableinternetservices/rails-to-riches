@@ -1,44 +1,51 @@
 // src/components/Navbar.js
 import React, { useContext } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
+import { AppBar, Toolbar, Button, Typography, Box, Tooltip } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import NavbarLogo from './NavbarLogo';
 
 function Navbar() {
-  const { authTokens, setAuthTokens } = useContext(AuthContext);
+  const { user, handleLogout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    setAuthTokens(null);
-    localStorage.removeItem('tokens');
+  const logout = () => {
+    handleLogout();
+    navigate('/login');
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <AppBar position="static" sx={{ bgcolor: 'primary.dark' }}>
+    <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Button component={RouterLink} to="/" color="inherit">
-            RAILS ON RICHES
+        {/* Logo */}
+        <NavbarLogo width={70} height={70} />
+
+        {/* Spacer to push the Logout button to the far right */}
+        <Box sx={{ flexGrow: 1 }} />
+
+        {/* Logout Button */}
+        <Tooltip title="Logout">
+          <Button
+            color="secondary"
+            onClick={logout}
+            sx={{
+              bgcolor: 'primary.main',
+              color: 'error.contrastText',
+              minWidth: 'auto', // Remove minimum width to fit the icon snugly
+              padding: 1, // Adjust padding as needed
+              '&:hover': {
+                bgcolor: 'error.dark',
+              },
+            }}
+          >
+            <LogoutIcon />
           </Button>
-        </Typography>
-        {authTokens ? (
-          <Box>
-            <Button component={RouterLink} to="/profile" color="inherit">
-              Profile
-            </Button>
-            <Button onClick={handleLogout} color="inherit">
-              Logout
-            </Button>
-          </Box>
-        ) : (
-          <Box>
-            <Button component={RouterLink} to="/login" color="inherit">
-              Login
-            </Button>
-            <Button component={RouterLink} to="/signup" color="inherit">
-              Signup
-            </Button>
-          </Box>
-        )}
+        </Tooltip>
       </Toolbar>
     </AppBar>
   );

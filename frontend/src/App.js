@@ -15,6 +15,16 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
+        {/* Protected Home Route */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route
@@ -36,6 +46,7 @@ function App() {
         {/* Delete this route later */}
         <Route path="/review" element={<Review />} />
         <Route path="/" element={<Home />} />
+        {/* Add other routes as needed */}
       </Routes>
     </Router>
   );
