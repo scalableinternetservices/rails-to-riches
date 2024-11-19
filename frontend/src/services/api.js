@@ -34,7 +34,7 @@ export const loginUser = (email, password) => {
 };
 
 export const addreview = (rating, content, isAnonymous) => {
-  return axios.post("/api/v1/reviews", {
+  return api.post("/api/v1/reviews", {
     rating,
     content,
     isAnonymous,
