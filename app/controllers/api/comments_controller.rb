@@ -1,20 +1,24 @@
 module Api
   class CommentsController < ApplicationController
-    # GET /comments
+    # GET /restaurants/:restaurant_id/reviews/:review_id/comments
     def index
-      @comments = Comment.all
+      @review = Review.find(params[:review_id])  # Find the review by its ID
+      @comments = @review.comments  # Get comments for that review
       render json: @comments
     end
 
     # GET /comments/:id
     def show
-      @comment = Comment.find(params[:id])
+      @comment = Comment.find(params[:id])  # Find a specific comment by ID
       render json: @comment
     end
 
-    # POST /comments
+    # POST /restaurants/:restaurant_id/reviews/:review_id/comments
     def create
-      @comment = Comment.new(comment_params)
+      @review = Review.find(params[:review_id])  # Find the review by ID
+      # Build the comment for the logged-in user and review
+      @comment = @review.comments.build(comment_params)
+      @comment.user = @user  # Set the logged-in user as the author of the comment
 
       if @comment.save
         render json: @comment, status: :created
@@ -44,7 +48,7 @@ module Api
     private
 
     def comment_params
-      params.require(:comment).permit(:user_id, :review_id, :content)
+      params.require(:comment).permit(:content)  # No user_id here, it's handled by @user
     end
   end
 end

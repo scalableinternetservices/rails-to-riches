@@ -1,7 +1,7 @@
 class CreateRestaurants < ActiveRecord::Migration[7.1]
   def change
     create_table :restaurants do |t|
-      t.references :users, null: false, foreign_key: true # Business owner
+      t.references :user, null: false, foreign_key: true # Business owner
       t.string :name
       t.string :address
       t.string :city

@@ -1,6 +1,8 @@
 # app/controllers/api/authentication_controller.rb
 module Api
   class AuthenticationController < ApplicationController
+    skip_before_action :authorize_request, only: [:signup, :login] # Allow public access to these actions
+
     # POST /api/signup
     def signup
       @user = User.new(user_params)

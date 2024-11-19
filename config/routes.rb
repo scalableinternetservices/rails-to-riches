@@ -8,13 +8,13 @@ Rails.application.routes.draw do
     
     resources :users, only: [:index, :show, :update, :destroy]
     resources :restaurants do
-      resources :reviews, only: [:index, :create]
+      resources :reviews, only: [:index, :create] do
+        resources :comments, only: [:index, :create]
+      end
       resources :photos, only: [:index, :create]
     end
-    resources :reviews, only: [:show, :update, :destroy] do
-      resources :comments, only: [:index, :create]
-    end
+    resources :reviews, only: [:show, :update, :destroy]
     resources :comments, only: [:show, :update, :destroy]
-    resources :photos, only: [:show, :destroy]
+    resources :photos, only: [:show, :update, :destroy]
   end
 end

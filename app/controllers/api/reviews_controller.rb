@@ -1,8 +1,9 @@
 module Api
   class ReviewsController < ApplicationController
-    # GET /reviews
+    # GET /restaurants/:restaurant_id/reviews
     def index
-      @reviews = Review.all
+      @restaurant = Restaurant.find(params[:restaurant_id])
+      @reviews = @restaurant.reviews
       render json: @reviews
     end
 
@@ -12,9 +13,12 @@ module Api
       render json: @review
     end
 
-    # POST /reviews
+    # POST /restaurants/:restaurant_id/reviews
     def create
-      @review = Review.new(review_params)
+      @restaurant = Restaurant.find(params[:restaurant_id])
+      # Build the review for the currently logged-in user and the restaurant
+      @review = @restaurant.reviews.build(review_params)
+      @review.user = @user  # Set the review's user to the logged-in user
 
       if @review.save
         render json: @review, status: :created
@@ -44,7 +48,7 @@ module Api
     private
 
     def review_params
-      params.require(:review).permit(:user_id, :restaurant_id, :rating, :content)
+      params.require(:review).permit(:rating, :content) # Do not pass user_id, it's handled by @user
     end
   end
 end

@@ -1,7 +1,7 @@
 class Restaurant < ApplicationRecord
   belongs_to :user # The business owner
-  has_many :review, dependent: :destroy
-  has_many :photo, dependent: :destroy
+  has_many :reviews, dependent: :destroy
+  has_many :photos, dependent: :destroy
 
   # Validations to ensure data consistency
   validates :address, presence: true

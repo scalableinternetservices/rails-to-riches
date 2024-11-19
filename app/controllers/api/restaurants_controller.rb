@@ -14,7 +14,8 @@ module Api
 
     # POST /restaurants
     def create
-      @restaurant = Restaurant.new(restaurant_params)
+      # Build the restaurant for the currently logged-in user
+      @restaurant = @user.restaurants.build(restaurant_params)
 
       if @restaurant.save
         render json: @restaurant, status: :created
@@ -27,25 +28,33 @@ module Api
     def update
       @restaurant = Restaurant.find(params[:id])
 
-      if @restaurant.update(restaurant_params)
-        render json: @restaurant
+      if @restaurant.user_id == @user.id
+        if @restaurant.update(restaurant_params)
+          render json: @restaurant
+        else
+          render json: { errors: @restaurant.errors.full_messages }, status: :unprocessable_entity
+        end
       else
-        render json: { errors: @restaurant.errors.full_messages }, status: :unprocessable_entity
+        render json: { error: 'You are not authorized to update this restaurant' }, status: :forbidden
       end
     end
 
     # DELETE /restaurants/:id
     def destroy
       @restaurant = Restaurant.find(params[:id])
-      @restaurant.destroy
-      head :no_content
+
+      if @restaurant.user_id == @user.id
+        @restaurant.destroy
+        head :no_content
+      else
+        render json: { error: 'You are not authorized to delete this restaurant' }, status: :forbidden
+      end
     end
 
     private
 
     def restaurant_params
       params.require(:restaurant).permit(
-        :user_id,
         :name,
         :address,
         :city,
