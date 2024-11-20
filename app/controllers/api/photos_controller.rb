@@ -2,6 +2,8 @@ module Api
   class PhotosController < ApplicationController
     before_action :set_restaurant, only: %i[index create]
     before_action :set_photo, only: %i[show update destroy]
+    before_action :authorize_business_owner, only: [:create, :update, :destroy]
+    skip_before_action :authorize_request, only: [:show, :index]
 
     # GET /restaurants/:restaurant_id/photos
     def index
@@ -66,5 +68,12 @@ module Api
     def photo_params
       params.require(:photo).permit(:image)  # Only permit the photo image
     end
+
+    def authorize_business_owner
+      unless @user.role == 'business_owner'
+        render json: { error: 'You are not authorized to perform this action' }, status: :forbidden
+      end
+    end
+
   end
 end

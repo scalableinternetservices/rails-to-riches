@@ -1,5 +1,7 @@
 module Api
   class CommentsController < ApplicationController
+    skip_before_action :authorize_request, only: [:show, :index]
+
     # GET /restaurants/:restaurant_id/reviews/:review_id/comments
     def index
       @review = Review.find(params[:review_id])  # Find the review by its ID

@@ -12,9 +12,11 @@ Rails.application.routes.draw do
         resources :comments, only: [:index, :create]
       end
       resources :photos, only: [:index, :create]
+      resources :dishes, only: [:index, :create]
     end
     resources :reviews, only: [:show, :update, :destroy]
     resources :comments, only: [:show, :update, :destroy]
     resources :photos, only: [:show, :update, :destroy]
+    resources :dishes, only: [:show, :update, :destroy]
   end
 end

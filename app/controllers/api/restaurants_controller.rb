@@ -1,5 +1,8 @@
 module Api
   class RestaurantsController < ApplicationController
+    before_action :authorize_business_owner, only: [:create, :update, :destroy]
+    skip_before_action :authorize_request, only: [:show, :index]
+
     # GET /restaurants
     def index
       @restaurants = Restaurant.all
@@ -52,6 +55,12 @@ module Api
     end
 
     private
+
+    def authorize_business_owner
+      unless @user.role == 'business_owner'
+        render json: { error: 'You are not authorized to perform this action' }, status: :forbidden
+      end
+    end
 
     def restaurant_params
       params.require(:restaurant).permit(

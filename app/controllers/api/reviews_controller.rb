@@ -1,5 +1,7 @@
 module Api
   class ReviewsController < ApplicationController
+    skip_before_action :authorize_request, only: [:show, :index]
+
     # GET /restaurants/:restaurant_id/reviews
     def index
       @restaurant = Restaurant.find(params[:restaurant_id])

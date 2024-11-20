@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_15_003447) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_20_182106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_15_003447) do
     t.datetime "updated_at", null: false
     t.index ["review_id"], name: "index_comments_on_review_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "dishes", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.decimal "price"
+    t.bigint "restaurant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["restaurant_id"], name: "index_dishes_on_restaurant_id"
   end
 
   create_table "photos", force: :cascade do |t|
@@ -99,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_15_003447) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "reviews"
   add_foreign_key "comments", "users"
+  add_foreign_key "dishes", "restaurants"
   add_foreign_key "photos", "restaurants"
   add_foreign_key "restaurants", "users"
   add_foreign_key "reviews", "restaurants"
