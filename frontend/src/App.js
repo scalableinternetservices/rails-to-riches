@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import PostDetail from "./pages/PostDetail";
+import Review from "./pages/Review";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
 
@@ -36,6 +37,15 @@ function App() {
           element={
             <PrivateRoute>
               <PostDetail />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/review"
+          element={
+            <PrivateRoute>
+              <Review />
             </PrivateRoute>
           }
         />
