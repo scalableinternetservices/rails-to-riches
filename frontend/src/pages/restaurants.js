@@ -1,74 +1,67 @@
-// src/pages/Restaurants.js
 import React, { useState, useEffect } from 'react';
-import { Container, TextField, Box, Typography, Grid, Paper, Card, CardContent } from '@mui/material';
-import axios from 'axios';
+import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Rating, Container } from '@mui/material';
+import mockRestaurants from '../mockRestaurants.json'; // Adjust the path if necessary
 
-function Restaurants() {
-  const [restaurants, setRestaurants] = useState([]);
+function Home() {
   const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    // Fetch all restaurants from the backend
-    axios.get('/api/restaurants')
-      .then((response) => setRestaurants(response.data))
-      .catch((error) => console.error('Error fetching restaurants:', error));
-  }, []);
+  const [filteredRestaurants, setFilteredRestaurants] = useState(mockRestaurants);
 
   const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    setFilteredRestaurants(
+      mockRestaurants.filter((restaurant) =>
+        restaurant.name.toLowerCase().includes(query)
+      )
+    );
   };
 
-  const filteredRestaurants = restaurants.filter((restaurant) =>
-    restaurant.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <Container component="main" maxWidth="md" sx={{ mt: 8 }}>
-      <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography component="h1" variant="h4" color="primary.dark" gutterBottom>
-            Restaurants
-          </Typography>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="Search for a restaurant..."
-            value={searchQuery}
-            onChange={handleSearch}
-            sx={{ mb: 3 }}
-          />
-          <Grid container spacing={2}>
-            {filteredRestaurants.length > 0 ? (
-              filteredRestaurants.map((restaurant) => (
-                <Grid item xs={12} sm={6} md={4} key={restaurant.id}>
-                  <Card sx={{ height: '100%' }}>
-                    <CardContent>
-                      <Typography variant="h6" color="primary.main">
-                        {restaurant.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        {restaurant.description}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {restaurant.address}, {restaurant.city}, {restaurant.state}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Phone: {restaurant.phone_number}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))
-            ) : (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                No restaurants found.
-              </Typography>
-            )}
+    <Container maxWidth="lg">
+      <Box my={4} display="flex" justifyContent="center">
+        <TextField
+          variant="outlined"
+          fullWidth
+          placeholder="Search restaurants..."
+          value={searchQuery}
+          onChange={handleSearch}
+          sx={{ maxWidth: '500px' }}
+        />
+      </Box>
+
+      <Grid container spacing={3}>
+        {filteredRestaurants.map((restaurant) => (
+          <Grid item xs={12} sm={6} md={4} key={restaurant.id}>
+            <Card>
+              <CardMedia
+                component="img"
+                height="140"
+                image={restaurant.image_url || 'https://via.placeholder.com/300x140'}
+                alt={restaurant.name}
+              />
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  {restaurant.name}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {restaurant.city}, {restaurant.state}
+                </Typography>
+                <Box display="flex" alignItems="center" mt={1}>
+                  <Rating value={restaurant.rating || 0} readOnly />
+                  <Typography variant="body2" sx={{ ml: 1 }}>
+                    ({restaurant.reviews_count || 0} reviews)
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="textSecondary" mt={1}>
+                  {restaurant.description}
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
-        </Box>
-      </Paper>
+        ))}
+      </Grid>
     </Container>
   );
 }
 
-export default Restaurants;
+export default Home;
