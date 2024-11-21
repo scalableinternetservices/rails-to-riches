@@ -2,41 +2,23 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Rating from "@mui/material/Rating";
-import StarIcon from "@mui/icons-material/Star";
 import Grid from "@mui/material/Grid2";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import { addReview } from "../services/api";
+import { addComment } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
-import BasicModal from "../components/BasicModal";
-import Comment from "../components/Comment";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "90%",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
-
-export default function Review() {
-  const [rating, setRating] = useState(0);
+export default function Comment() {
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [content, setContent] = useState();
+  const [comment, setComment] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = React.useState(false);
 
-  const handleReviewSubmit = async (event) => {
+  const handleCommentSubmit = async (event) => {
     event.preventDefault();
     try {
       setIsSubmitting(true);
-      const response = await addReview(rating, content, isAnonymous);
+      const response = await addComment(comment, isAnonymous);
       if (response.status === 200) {
-        setOpen(true);
       } else {
       }
     } catch (error) {
@@ -48,32 +30,19 @@ export default function Review() {
 
   return (
     <>
-      <Box sx={style} component="form" onSubmit={handleReviewSubmit} noValidate>
+      <Box component="form" onSubmit={handleCommentSubmit} noValidate m={2}>
         <LinearProgressBar show={isSubmitting} />
         <Typography variant="subtitle1">
           <Grid container rowSpacing={1}>
-            <Grid size={12}>
-              <Rating
-                name="ratings"
-                value={rating}
-                precision={0.5}
-                onChange={(event, newValue) => {
-                  setRating(newValue);
-                }}
-                emptyIcon={
-                  <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
-                }
-              />
-            </Grid>
             <Grid size={12}>
               <TextField
                 placeholder="Add your comments"
                 multiline
                 maxRows={4}
                 fullWidth
-                value={content}
+                value={comment}
                 onChange={(event) => {
-                  setContent(event.target.value);
+                  setComment(event.target.value);
                 }}
               />
             </Grid>
@@ -90,17 +59,11 @@ export default function Review() {
             </Grid>
             <Grid size={12}>
               <Button type="submit" variant="contained" disabled={isSubmitting}>
-                Submit Review
+                Submit Comment
               </Button>
             </Grid>
           </Grid>
         </Typography>
-        <BasicModal
-          title={"Review Posted"}
-          content={"Thank you for submitting your review."}
-          open={open}
-        />
-        <Comment />
       </Box>
     </>
   );

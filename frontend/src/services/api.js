@@ -34,10 +34,17 @@ export const loginUser = (email, password) => {
   return api.post("/api/login", { user: { email, password } });
 };
 
-export const addreview = (rating, content, isAnonymous) => {
+export const addReview = (rating, content, isAnonymous) => {
   return api.post("/api/v1/reviews", {
     rating,
     content,
+    isAnonymous,
+  });
+};
+
+export const addComment = (comment, isAnonymous) => {
+  return api.post("/api/v1/comments", {
+    comment,
     isAnonymous,
   });
 };
