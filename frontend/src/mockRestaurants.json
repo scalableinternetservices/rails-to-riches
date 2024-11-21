@@ -1,23 +1,152 @@
 [
-    {
-      "id": 1,
-      "name": "The Gourmet Kitchen",
-      "city": "Santa Barbara",
-      "state": "CA",
-      "image_url": "https://example.com/images/gourmet-kitchen.jpg",
-      "rating": 4.5,
-      "reviews_count": 120,
-      "description": "A delightful place to enjoy modern cuisine."
-    },
-    {
-      "id": 2,
-      "name": "Cafe Aroma",
-      "city": "Los Angeles",
-      "state": "CA",
-      "image_url": null,
-      "rating": 4.0,
-      "reviews_count": 95,
-      "description": "Cozy cafe with aromatic coffee and pastries."
-    }
-  ]
-  
+  {
+    "id": 1,
+    "name": "The Gourmet Kitchen",
+    "city": "Santa Barbara",
+    "state": "CA",
+    "image_url": "https://via.placeholder.com/300x140?text=The+Gourmet+Kitchen",
+    "rating": 4.5,
+    "reviews_count": 120,
+    "description": "A delightful place to enjoy modern cuisine."
+  },
+  {
+    "id": 2,
+    "name": "Cafe Aroma",
+    "city": "Los Angeles",
+    "state": "CA",
+    "image_url": "https://via.placeholder.com/300x140?text=Cafe+Aroma",
+    "rating": 4.0,
+    "reviews_count": 95,
+    "description": "Cozy cafe with aromatic coffee and pastries."
+  },
+  {
+    "id": 3,
+    "name": "Pizza Paradise",
+    "city": "San Francisco",
+    "state": "CA",
+    "image_url": "https://via.placeholder.com/300x140?text=Pizza+Paradise",
+    "rating": 5.0,
+    "reviews_count": 200,
+    "description": "The best pizza in town!"
+  },
+  {
+    "id": 4,
+    "name": "Bistro Bella",
+    "city": "Chicago",
+    "state": "IL",
+    "image_url": "https://via.placeholder.com/300x140?text=Bistro+Bella",
+    "rating": 4.8,
+    "reviews_count": 180,
+    "description": "Classic Italian dishes with a modern twist."
+  },
+  {
+    "id": 5,
+    "name": "Grill & Chill",
+    "city": "New York",
+    "state": "NY",
+    "image_url": "https://via.placeholder.com/300x140?text=Grill+%26+Chill",
+    "rating": 4.3,
+    "reviews_count": 140,
+    "description": "Perfect spot for BBQ lovers."
+  },
+  {
+    "id": 6,
+    "name": "Vegan Delight",
+    "city": "Portland",
+    "state": "OR",
+    "image_url": "https://via.placeholder.com/300x140?text=Vegan+Delight",
+    "rating": 4.7,
+    "reviews_count": 75,
+    "description": "Delicious vegan dishes that everyone will love."
+  },
+  {
+    "id": 7,
+    "name": "Seafood Sensations",
+    "city": "Miami",
+    "state": "FL",
+    "image_url": "https://via.placeholder.com/300x140?text=Seafood+Sensations",
+    "rating": 4.9,
+    "reviews_count": 210,
+    "description": "Fresh seafood right off the dock."
+  },
+  {
+    "id": 8,
+    "name": "Burger Barn",
+    "city": "Austin",
+    "state": "TX",
+    "image_url": "https://via.placeholder.com/300x140?text=Burger+Barn",
+    "rating": 4.6,
+    "reviews_count": 160,
+    "description": "Juicy burgers with all the fixings."
+  },
+  {
+    "id": 9,
+    "name": "The Dessert Den",
+    "city": "Las Vegas",
+    "state": "NV",
+    "image_url": "https://via.placeholder.com/300x140?text=The+Dessert+Den",
+    "rating": 4.2,
+    "reviews_count": 110,
+    "description": "A paradise for dessert lovers."
+  },
+  {
+    "id": 10,
+    "name": "Taco Town",
+    "city": "San Diego",
+    "state": "CA",
+    "image_url": "https://via.placeholder.com/300x140?text=Taco+Town",
+    "rating": 4.4,
+    "reviews_count": 85,
+    "description": "Authentic Mexican tacos with fresh ingredients."
+  },
+  {
+    "id": 11,
+    "name": "Steakhouse Supreme",
+    "city": "Dallas",
+    "state": "TX",
+    "image_url": "https://via.placeholder.com/300x140?text=Steakhouse+Supreme",
+    "rating": 5.0,
+    "reviews_count": 300,
+    "description": "Premium steaks cooked to perfection."
+  },
+  {
+    "id": 12,
+    "name": "Urban Eats",
+    "city": "Seattle",
+    "state": "WA",
+    "image_url": "https://via.placeholder.com/300x140?text=Urban+Eats",
+    "rating": 4.1,
+    "reviews_count": 60,
+    "description": "Trendy spot for quick bites and coffee."
+  },
+  {
+    "id": 13,
+    "name": "Dim Sum Delight",
+    "city": "San Francisco",
+    "state": "CA",
+    "image_url": "https://via.placeholder.com/300x140?text=Dim+Sum+Delight",
+    "rating": 4.7,
+    "reviews_count": 190,
+    "description": "Delicious dim sum in a family-friendly setting."
+  },
+  {
+    "id": 14,
+    "name": "Sushi Sensation",
+    "city": "Honolulu",
+    "state": "HI",
+    "image_url": "https://via.placeholder.com/300x140?text=Sushi+Sensation",
+    "rating": 4.9,
+    "reviews_count": 250,
+    "description": "Fresh sushi rolls and sashimi with ocean views."
+  },
+  {
+    "id": 15,
+    "name": "The French Table",
+    "city": "Boston",
+    "state": "MA",
+    "image_url": "https://via.placeholder.com/300x140?text=The+French+Table",
+    "rating": 4.5,
+    "reviews_count": 100,
+    "description": "Elegant French dining experience."
+  }
+]
