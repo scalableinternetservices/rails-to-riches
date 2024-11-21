@@ -38,10 +38,8 @@ export default function Review() {
       if (response.status === 200) {
         setOpen(true);
       } else {
-        setOpen(true);
       }
     } catch (error) {
-      setOpen(true);
       setIsSubmitting(true);
     } finally {
       setIsSubmitting(false);
