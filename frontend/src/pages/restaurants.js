@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Rating, Container } from '@mui/material';
 import mockRestaurants from '../mockRestaurants.json'; // Adjust the path if necessary
 
-function Home() {
+function Restaurants() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredRestaurants, setFilteredRestaurants] = useState(mockRestaurants);
 
@@ -64,4 +64,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Restaurants;
