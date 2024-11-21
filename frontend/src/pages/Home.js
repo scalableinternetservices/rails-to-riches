@@ -2,6 +2,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import { Typography, Box, Container } from "@mui/material";
+import Restaurants from "../components/Restaurants";
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -21,7 +22,7 @@ function Home() {
           {user ? `Welcome, ${user.name}!` : "Welcome!"}
         </Typography>
         <Typography variant="body1">
-          # placeholder for home component
+          <Restaurants />
         </Typography>
       </Box>
     </Container>
