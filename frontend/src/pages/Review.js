@@ -9,7 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
 import { addReview } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
-import BasicModal from "../components/BasicModal";
+import BasicDialog from "../components/BasicDialog";
 import Comment from "../components/Comment";
 
 const style = {
@@ -38,8 +38,10 @@ export default function Review() {
       if (response.status === 200) {
         setOpen(true);
       } else {
+        setOpen(true);
       }
     } catch (error) {
+      setOpen(true);
       setIsSubmitting(true);
     } finally {
       setIsSubmitting(false);
@@ -95,7 +97,7 @@ export default function Review() {
             </Grid>
           </Grid>
         </Typography>
-        <BasicModal
+        <BasicDialog
           title={"Review Posted"}
           content={"Thank you for submitting your review."}
           open={open}

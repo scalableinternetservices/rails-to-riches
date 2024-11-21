@@ -43,13 +43,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_182106) do
   end
 
   create_table "comments", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "review_id", null: false
+    t.bigint "users_id", null: false
+    t.bigint "reviews_id", null: false
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["review_id"], name: "index_comments_on_review_id"
-    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["reviews_id"], name: "index_comments_on_reviews_id"
+    t.index ["users_id"], name: "index_comments_on_users_id"
   end
 
   create_table "dishes", force: :cascade do |t|
@@ -63,14 +63,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_182106) do
   end
 
   create_table "photos", force: :cascade do |t|
-    t.bigint "restaurant_id", null: false
+    t.bigint "restaurants_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["restaurant_id"], name: "index_photos_on_restaurant_id"
+    t.index ["restaurants_id"], name: "index_photos_on_restaurants_id"
   end
 
   create_table "restaurants", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "users_id", null: false
     t.string "name"
     t.string "address"
     t.string "city"
@@ -81,18 +81,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_182106) do
     t.string "website"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_restaurants_on_user_id"
+    t.index ["users_id"], name: "index_restaurants_on_users_id"
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "restaurant_id", null: false
+    t.bigint "users_id", null: false
+    t.bigint "restaurants_id", null: false
     t.integer "rating", null: false
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["restaurant_id"], name: "index_reviews_on_restaurant_id"
-    t.index ["user_id"], name: "index_reviews_on_user_id"
+    t.index ["restaurants_id"], name: "index_reviews_on_restaurants_id"
+    t.index ["users_id"], name: "index_reviews_on_users_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -107,11 +107,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_182106) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "comments", "reviews"
-  add_foreign_key "comments", "users"
+  add_foreign_key "comments", "reviews", column: "reviews_id"
+  add_foreign_key "comments", "users", column: "users_id"
   add_foreign_key "dishes", "restaurants"
-  add_foreign_key "photos", "restaurants"
-  add_foreign_key "restaurants", "users"
-  add_foreign_key "reviews", "restaurants"
-  add_foreign_key "reviews", "users"
+  add_foreign_key "photos", "restaurants", column: "restaurants_id"
+  add_foreign_key "restaurants", "users", column: "users_id"
+  add_foreign_key "reviews", "restaurants", column: "restaurants_id"
+  add_foreign_key "reviews", "users", column: "users_id"
 end

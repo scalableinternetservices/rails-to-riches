@@ -14,15 +14,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Logo from "../components/Logo"; // Import the Logo component
-
-// Import MUI Dialog Components
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import BasicDialog from "../components/BasicDialog";
 
 function Signup() {
   const navigate = useNavigate();
@@ -139,43 +131,7 @@ function Signup() {
           </Typography>
 
           {/* Error Dialog */}
-          <Dialog
-            open={openDialog}
-            onClose={handleCloseDialog}
-            aria-labelledby="error-dialog-title"
-            aria-describedby="error-dialog-description"
-          >
-            <DialogTitle id="error-dialog-title">
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography variant="h6">Error</Typography>
-                <IconButton
-                  aria-label="close"
-                  onClick={handleCloseDialog}
-                  sx={{
-                    color: (theme) => theme.palette.grey[500],
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id="error-dialog-description">
-                {error}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDialog} autoFocus>
-                OK
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <BasicDialog title="Error" content={error} open={openDialog} handleClose={handleCloseDialog}/>
 
           {/* Form */}
           <Box
