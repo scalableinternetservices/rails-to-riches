@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
-import { listRestaurants } from '../services/api'; // Import the listRestaurants API function
+import { listRestaurants, fetchPrimaryPhoto, deletePhoto } from '../services/api';
 
 function Restaurants() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -8,12 +8,28 @@ function Restaurants() {
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
 
   useEffect(() => {
-    // Fetch the list of restaurants when the component mounts
     const fetchRestaurants = async () => {
       try {
         const response = await listRestaurants();
-        setRestaurants(response.data);
-        setFilteredRestaurants(response.data);
+        const restaurantsWithPhotos = await Promise.all(
+          response.data.map(async (restaurant) => {
+            try {
+              const photoResponse = await fetchPrimaryPhoto(restaurant.id);
+              return {
+                ...restaurant,
+                image_url: photoResponse.data.image_url || null,
+              };
+            } catch (error) {
+              console.error(`Error fetching primary photo for restaurant ${restaurant.id}:`, error);
+              return {
+                ...restaurant,
+                image_url: null,
+              };
+            }
+          })
+        );
+        setRestaurants(restaurantsWithPhotos);
+        setFilteredRestaurants(restaurantsWithPhotos);
       } catch (error) {
         console.error('Error fetching restaurants:', error);
       }
@@ -52,7 +68,7 @@ function Restaurants() {
               <CardMedia
                 component="img"
                 height="140"
-                image={restaurant.image_url || 'https://via.placeholder.com/300x140?text='+restaurant.name.replaceAll(' ', '+')}
+                image={restaurant.image_url || 'https://via.placeholder.com/300x140?text=' + restaurant.name.replaceAll(' ', '+')}
                 alt={restaurant.name}
               />
               <CardContent>

@@ -67,6 +67,7 @@ interface CommentPayload {
 interface PhotoPayload {
   photo: {
     image: File;
+    primary: boolean;
   };
 }
 

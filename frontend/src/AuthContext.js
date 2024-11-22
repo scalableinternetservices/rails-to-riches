@@ -1,5 +1,6 @@
 // src/AuthContext.js
 import React, { createContext, useState } from "react";
+import { setAuthToken } from "./services/api";
 
 // Create the AuthContext
 export const AuthContext = createContext();
@@ -36,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     if (tokens && userData) {
       setAuthTokensState(tokens);
       setUserState(userData);
+      setAuthToken(tokens);
       localStorage.setItem("tokens", JSON.stringify(tokens));
       localStorage.setItem("user", JSON.stringify(userData));
     } else {
