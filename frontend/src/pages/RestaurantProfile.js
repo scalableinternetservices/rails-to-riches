@@ -1,14 +1,28 @@
 // src/pages/RestaurantProfile.js
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Typography, Box, Chip, Link, CircularProgress } from '@mui/material';
-import Rating from '@mui/material/Rating';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Box,
+  Chip,
+  Link,
+  CircularProgress,
+} from "@mui/material";
+import Rating from "@mui/material/Rating";
 
-import PhotoGallery from '../components/PhotoGallery';
-import DishesList from '../components/DishesList';
-import ReviewsList from '../components/ReviewsList';
+import PhotoGallery from "../components/PhotoGallery";
+import DishesList from "../components/DishesList";
+import ReviewsList from "../components/ReviewsList";
 
-import { getRestaurant, listReviews, listComments, listDishes, listPhotos } from '../services/api'; // Import API functions
+import {
+  getRestaurant,
+  listReviews,
+  listComments,
+  listDishes,
+  listPhotos,
+} from "../services/api"; // Import API functions
+import Review from "./Review";
 
 function RestaurantProfile() {
   const { id } = useParams();
@@ -18,17 +32,25 @@ function RestaurantProfile() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch restaurant details
         const restaurantResponse = await getRestaurant(id);
         setRestaurant(restaurantResponse.data);
 
-        // Fetch reviews and comments
+        // Fetch dishes
+        const dishesResponse = await listDishes(id);
+        setDishes(dishesResponse.data);
+
+        // Fetch photos
+        const photosResponse = await listPhotos(id);
+        setPhotos(photosResponse.data);
+
         const reviewsResponse = await listReviews(id);
         const reviewsWithComments = await Promise.all(
           reviewsResponse.data.map(async (review) => {
@@ -40,17 +62,8 @@ function RestaurantProfile() {
           })
         );
         setReviews(reviewsWithComments);
-
-        // Fetch dishes
-        const dishesResponse = await listDishes(id);
-        setDishes(dishesResponse.data);
-
-        // Fetch photos
-        const photosResponse = await listPhotos(id);
-        setPhotos(photosResponse.data);
-
       } catch (err) {
-        setError('Failed to load restaurant data');
+        setError("Failed to load restaurant data");
         console.error(err);
       } finally {
         setLoading(false);
@@ -58,7 +71,11 @@ function RestaurantProfile() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, reload]);
+
+  const handleReload = () => {
+    setReload(true);
+  };
 
   const calculateAverageRating = (reviews) => {
     if (reviews.length === 0) return 0;
@@ -68,7 +85,7 @@ function RestaurantProfile() {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <CircularProgress />
       </Box>
     );
@@ -76,7 +93,7 @@ function RestaurantProfile() {
 
   if (error) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <Typography variant="h6" color="error">
           {error}
         </Typography>
@@ -88,34 +105,49 @@ function RestaurantProfile() {
   const roundedAverageRating = Math.round(averageRating * 10) / 10;
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, display: 'flex', flexDirection: 'column' }}>
+    <Container
+      maxWidth="lg"
+      sx={{ mt: 4, mb: 4, display: "flex", flexDirection: "column" }}
+    >
       {/* Restaurant Header */}
       <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
           <Typography variant="h3" component="h1" gutterBottom>
             {restaurant.name}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: { xs: 1, sm: 0 } }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              ml: 2,
+              mt: { xs: 1, sm: 0 },
+            }}
+          >
             <Rating
               name="average-rating"
               value={averageRating}
               precision={0.1}
               readOnly
-              sx={{ color: '#FFD700', fontSize: '1.5rem' }}
+              sx={{ color: "#FFD700", fontSize: "1.5rem" }}
             />
             <Typography variant="h6" sx={{ ml: 1 }}>
-              {roundedAverageRating} ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
+              {roundedAverageRating} ({reviews.length} review
+              {reviews.length !== 1 ? "s" : ""})
             </Typography>
           </Box>
         </Box>
         <Typography variant="body1" color="textSecondary" gutterBottom>
-          {restaurant.address}, {restaurant.city}, {restaurant.state} {restaurant.zip}
+          {restaurant.address}, {restaurant.city}, {restaurant.state}{" "}
+          {restaurant.zip}
         </Typography>
         <Typography variant="body1" gutterBottom>
           {restaurant.description}
         </Typography>
         <Box sx={{ mt: 2 }}>
-          <Chip label={`Phone: ${restaurant.phone_number}`} sx={{ mr: 1, mb: 1 }} />
+          <Chip
+            label={`Phone: ${restaurant.phone_number}`}
+            sx={{ mr: 1, mb: 1 }}
+          />
           <Chip
             label={
               <Link href={restaurant.website} target="_blank" rel="noopener">
@@ -149,6 +181,10 @@ function RestaurantProfile() {
           Reviews
         </Typography>
         <ReviewsList reviews={reviews} />
+      </Box>
+
+      <Box sx={{ mb: 4 }}>
+        <Review handleFetchReviews={handleReload} />
       </Box>
     </Container>
   );

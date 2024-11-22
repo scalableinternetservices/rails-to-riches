@@ -53,6 +53,7 @@ interface ReviewPayload {
   review: {
     rating: number;
     content?: string;
+    anonymous?: boolean;
   };
 }
 

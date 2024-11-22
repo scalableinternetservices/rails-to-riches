@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import { createReview } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
 import BasicDialog from "../components/BasicDialog";
-import Comment from "../components/Comment";
+import { useParams } from 'react-router-dom';
 
 const style = {
   position: "absolute",
@@ -23,7 +23,8 @@ const style = {
   p: 4,
 };
 
-export default function Review() {
+export default function Review(handleFetchReviews) {
+  const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [content, setContent] = useState();
@@ -34,9 +35,14 @@ export default function Review() {
     event.preventDefault();
     try {
       setIsSubmitting(true);
-      const response = await createReview(rating, content, isAnonymous);
-      if (response.status === 200) {
-        setOpen(true);
+      const response = await createReview(id, {
+        rating: rating,
+        content: content,
+        anonymous: isAnonymous
+      });
+      if (response.status === 201) {
+        //setOpen(true);
+        handleFetchReviews()
       } else {
       }
     } catch (error) {
@@ -48,7 +54,7 @@ export default function Review() {
 
   return (
     <>
-      <Box sx={style} component="form" onSubmit={handleReviewSubmit} noValidate>
+      <Box component="form" onSubmit={handleReviewSubmit} noValidate>
         <LinearProgressBar show={isSubmitting} />
         <Typography variant="subtitle1">
           <Grid container rowSpacing={1}>
@@ -100,7 +106,6 @@ export default function Review() {
           content={"Thank you for submitting your review."}
           open={open}
         />
-        <Comment />
       </Box>
     </>
   );
