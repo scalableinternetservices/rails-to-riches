@@ -6,22 +6,32 @@ module Api
     # GET /restaurants
     def index
       @restaurants = Restaurant.all
-      render json: @restaurants
+      render json: @restaurants.map do |restaurant|
+        restaurant.as_json.merge(
+          average_rating: restaurant.average_rating,
+          review_count: restaurant.review_count
+        )
+      end
     end
 
     # GET /restaurants/:id
     def show
       @restaurant = Restaurant.find(params[:id])
-      render json: @restaurant
+      render json: @restaurant.as_json.merge(
+        average_rating: @restaurant.average_rating,
+        review_count: @restaurant.review_count
+      )
     end
 
     # POST /restaurants
     def create
-      # Build the restaurant for the currently logged-in user
       @restaurant = @user.restaurants.build(restaurant_params)
 
       if @restaurant.save
-        render json: @restaurant, status: :created
+        render json: @restaurant.as_json.merge(
+          average_rating: @restaurant.average_rating,
+          review_count: @restaurant.review_count
+        ), status: :created
       else
         render json: { errors: @restaurant.errors.full_messages }, status: :unprocessable_entity
       end
@@ -33,7 +43,10 @@ module Api
 
       if @restaurant.user_id == @user.id
         if @restaurant.update(restaurant_params)
-          render json: @restaurant
+          render json: @restaurant.as_json.merge(
+            average_rating: @restaurant.average_rating,
+            review_count: @restaurant.review_count
+          )
         else
           render json: { errors: @restaurant.errors.full_messages }, status: :unprocessable_entity
         end
