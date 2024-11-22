@@ -1,71 +1,76 @@
-// src/App.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
-import PostDetail from "./pages/PostDetail";
 import Review from "./pages/Review";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
 import CreateRestaurant from "./pages/CreateRestaurant";
 import RestaurantProfile from "./pages/RestaurantProfile";
 
+// Wrapper component to include Navbar
+const PageWithNavbar = ({ children }) => (
+  <>
+    <Navbar />
+    {children}
+  </>
+);
+
 function App() {
   return (
     <Router>
-      <Navbar />
       <Routes>
         {/* Protected Home Route */}
         <Route
           path="/"
           element={
-            <PrivateRoute>
+            <PageWithNavbar>
               <Home />
-            </PrivateRoute>
+            </PageWithNavbar>
           }
         />
         <Route
           path="/profile"
           element={
             <PrivateRoute>
-              <Profile />
+              <PageWithNavbar>
+                <Profile />
+              </PageWithNavbar>
             </PrivateRoute>
           }
         />
-        <Route
-          path="/posts/:id"
-          element={
-            <PrivateRoute>
-              <PostDetail />
-            </PrivateRoute>
-          }
-        />
-
         <Route
           path="/review"
           element={
-            <PrivateRoute>
+            <PageWithNavbar>
               <Review />
-            </PrivateRoute>
+            </PageWithNavbar>
           }
         />
-
         <Route
           path="/restaurants/:id"
           element={
-            <PrivateRoute>
+            <PageWithNavbar>
               <RestaurantProfile />
+            </PageWithNavbar>
+          }
+        />
+        <Route
+          path="/createRestaurant"
+          element={
+            <PrivateRoute>
+              <PageWithNavbar>
+                <CreateRestaurant />
+              </PageWithNavbar>
             </PrivateRoute>
           }
         />
-        
 
-        {/* Public Routes */}
+        {/* Public Routes without Navbar */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/createRestaurant" element={<CreateRestaurant />} />
       </Routes>
     </Router>
   );

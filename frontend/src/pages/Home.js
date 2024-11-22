@@ -1,4 +1,3 @@
-// src/pages/Home.js
 import React, { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import { Typography, Box, Container } from "@mui/material";
@@ -21,9 +20,7 @@ function Home() {
         <Typography variant="h6">
           {user ? `Welcome, ${user.name}!` : "Welcome!"}
         </Typography>
-        <Typography variant="body1">
-          <Restaurants />
-        </Typography>
+        <Restaurants />
       </Box>
     </Container>
   );

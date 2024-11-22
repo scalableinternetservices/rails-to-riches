@@ -53,7 +53,9 @@ module Api
     end
 
     def authorize_business_owner
-      unless @user.role == 'business_owner'
+      @restaurant = Restaurant.find(params[:restaurant_id] || Dish.find(params[:id]).restaurant_id)
+      
+      unless @user.role == 'business_owner' && @restaurant.owner_id == @user.id
         render json: { error: 'You are not authorized to perform this action' }, status: :forbidden
       end
     end
