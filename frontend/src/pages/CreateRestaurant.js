@@ -48,7 +48,7 @@ export default function CreateRestaurant() {
       const restaurantResponse = await createRestaurant({
         name: formData.name,
         description: formData.description,
-        phone: formData.phone,
+        phone_number: formData.phone,
         address: formData.address,
         city: formData.city,
         state: formData.state,
