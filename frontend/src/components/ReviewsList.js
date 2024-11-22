@@ -1,4 +1,3 @@
-// src/components/ReviewsList.js
 import React from "react";
 import {
   Box,
@@ -13,11 +12,16 @@ import {
 import Comment from "../components/Comment";
 import Link from "@mui/material/Link";
 
-function ReviewsList({ reviews }) {
-  const [showComment, setShowComment] = React.useState(false);
-  const handleClick = () => {
-    setShowComment(!showComment);
+function ReviewsList({ reviews, fetchReviews }) {
+  const [openComments, setOpenComments] = React.useState({});
+
+  const handleToggleComment = (reviewId) => {
+    setOpenComments((prevState) => ({
+      ...prevState,
+      [reviewId]: !prevState[reviewId],
+    }));
   };
+
   return (
     <Box>
       {reviews.map((review) => (
@@ -44,31 +48,29 @@ function ReviewsList({ reviews }) {
               <Box sx={{ mt: 2, pl: 4 }}>
                 <Divider sx={{ mb: 2 }} />
                 {review.comments.map((comment) => (
-                  <>
-                    <Box
-                      key={comment.id}
-                      sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
-                    >
-                      <Avatar sx={{ width: 24, height: 24, mr: 1 }}>
-                        {comment.user_name ? comment.user_name.charAt(0) : "A"}
-                      </Avatar>
-                      <Box>
-                        <Typography variant="subtitle2">
-                          {comment.user_name ?? "Anonymous"}
-                        </Typography>
-                        <Typography variant="body2">
-                          {comment.content}
-                        </Typography>
-                      </Box>
+                  <Box
+                    key={comment.id}
+                    sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
+                  >
+                    <Avatar sx={{ width: 24, height: 24, mr: 1 }}>
+                      {comment.user_name ? comment.user_name.charAt(0) : "A"}
+                    </Avatar>
+                    <Box>
+                      <Typography variant="subtitle2">
+                        {comment.user_name ?? "Anonymous"}
+                      </Typography>
+                      <Typography variant="body2">
+                        {comment.content}
+                      </Typography>
                     </Box>
-                  </>
+                  </Box>
                 ))}
               </Box>
             )}
-            <Link onClick={handleClick} component="button">
+            <Link onClick={() => handleToggleComment(review.id)} component="button">
               Reply
             </Link>
-            {showComment && <Comment reviewId={review.id}/>}
+            {openComments[review.id] && <Comment reviewId={review.id} onCommentSubmitted={fetchReviews}/>}
           </CardContent>
         </Card>
       ))}

@@ -12,7 +12,7 @@ import LinearProgressBar from "../components/LinearProgressBar";
 import BasicDialog from "../components/BasicDialog";
 import { useParams } from 'react-router-dom';
 
-export default function Review(handleFetchReviews) {
+export default function Review({handleFetchReviews}) {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -30,8 +30,8 @@ export default function Review(handleFetchReviews) {
         anonymous: isAnonymous
       });
       if (response.status === 201) {
-        //setOpen(true);
-        handleFetchReviews()
+        setOpen(true);
+        handleFetchReviews();
       } else {
       }
     } catch (error) {

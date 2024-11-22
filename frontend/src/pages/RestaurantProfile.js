@@ -1,5 +1,5 @@
 // src/pages/RestaurantProfile.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import {
   Container,
@@ -32,50 +32,45 @@ function RestaurantProfile() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [reload, setReload] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      // Fetch restaurant details
+      const restaurantResponse = await getRestaurant(id);
+      setRestaurant(restaurantResponse.data);
+
+      // Fetch dishes
+      const dishesResponse = await listDishes(id);
+      setDishes(dishesResponse.data);
+
+      // Fetch photos
+      const photosResponse = await listPhotos(id);
+      setPhotos(photosResponse.data);
+
+      const reviewsResponse = await listReviews(id);
+      const reviewsWithComments = await Promise.all(
+        reviewsResponse.data.map(async (review) => {
+          const commentsResponse = await listComments(id, review.id);
+          return {
+            ...review,
+            comments: commentsResponse.data,
+          };
+        })
+      );
+      setReviews(reviewsWithComments);
+    } catch (err) {
+      setError("Failed to load restaurant data");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        // Fetch restaurant details
-        const restaurantResponse = await getRestaurant(id);
-        setRestaurant(restaurantResponse.data);
-
-        // Fetch dishes
-        const dishesResponse = await listDishes(id);
-        setDishes(dishesResponse.data);
-
-        // Fetch photos
-        const photosResponse = await listPhotos(id);
-        setPhotos(photosResponse.data);
-
-        const reviewsResponse = await listReviews(id);
-        const reviewsWithComments = await Promise.all(
-          reviewsResponse.data.map(async (review) => {
-            const commentsResponse = await listComments(id, review.id);
-            return {
-              ...review,
-              comments: commentsResponse.data,
-            };
-          })
-        );
-        setReviews(reviewsWithComments);
-      } catch (err) {
-        setError("Failed to load restaurant data");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
-  }, [id, reload]);
-
-  const handleReload = () => {
-    setReload(true);
-  };
+  }, [fetchData]);
 
   const calculateAverageRating = (reviews) => {
     if (reviews.length === 0) return 0;
@@ -180,11 +175,11 @@ function RestaurantProfile() {
         <Typography variant="h4" gutterBottom>
           Reviews
         </Typography>
-        <ReviewsList reviews={reviews} />
+        <ReviewsList reviews={reviews} fetchReviews={fetchData} />
       </Box>
 
       <Box sx={{ mb: 4 }}>
-        <Review handleFetchReviews={handleReload} />
+        <Review handleFetchReviews={fetchData} />
       </Box>
     </Container>
   );
