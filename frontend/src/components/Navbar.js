@@ -58,31 +58,6 @@ export default function Navbar() {
           {/* Conditional Rendering Based on User State */}
           {user ? (
             <>
-              { user.role==="business_owner" ? (
-                <>
-                {/* Create Restaurants */}
-                <Tooltip title="Create Restaurant">
-                <Button
-                  color="secondary"
-                  component={Link}
-                  to="/createRestaurant"
-                  sx={{
-                    bgcolor: "primary.main",
-                    color: "error.contrastText",
-                    minWidth: "auto",
-                    padding: 1,
-                    marginRight: 1,
-                    "&:hover": {
-                      bgcolor: "error.dark",
-                    },
-                  }}
-                >
-                Create a Restaurant
-                </Button>
-                </Tooltip>
-                </>
-              ) : (<></>)}
-
               {/* Profile Button */}
               <Tooltip title="Profile">
                 <Button

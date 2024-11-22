@@ -39,7 +39,7 @@ const Profile = () => {
             </Avatar>
             <Typography variant="h5">Your Profile</Typography>
           </Box>
-          <Grid container spacing={3}>
+          <Grid container spacing={6}>
             <Grid xs={12} sm={6}>
               <Box display="flex" alignItems="center" mb={1}>
                 <PersonIcon color="action" sx={{ mr: 1 }} />
