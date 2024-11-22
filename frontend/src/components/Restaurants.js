@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
+import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Container, Rating } from '@mui/material';
 import { Link } from 'react-router-dom';  // Import Link from react-router-dom
 import { listRestaurants, fetchPrimaryPhoto } from '../services/api';
 
@@ -83,6 +83,12 @@ function Restaurants() {
                   <Typography variant="body2" color="textSecondary" mt={1}>
                     {restaurant.description}
                   </Typography>
+                  <Box display="flex" alignItems="center" mt={1}>
+                    <Rating value={restaurant.average_rating || 0} precision={0.1} readOnly />
+                    <Typography variant="body2" sx={{ ml: 1 }}>
+                      ({restaurant.total_reviews || 0} reviews)
+                    </Typography>
+                  </Box>
                 </CardContent>
               </Card>
             </Link>
