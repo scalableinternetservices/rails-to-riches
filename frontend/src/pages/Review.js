@@ -12,17 +12,6 @@ import LinearProgressBar from "../components/LinearProgressBar";
 import BasicDialog from "../components/BasicDialog";
 import { useParams } from 'react-router-dom';
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "90%",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-};
-
 export default function Review(handleFetchReviews) {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
@@ -73,7 +62,7 @@ export default function Review(handleFetchReviews) {
             </Grid>
             <Grid size={12}>
               <TextField
-                placeholder="Add your comments"
+                placeholder="Add your Review"
                 multiline
                 maxRows={4}
                 fullWidth

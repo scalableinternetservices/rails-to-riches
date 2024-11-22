@@ -7,8 +7,11 @@ import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
 import { createComment } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
+import { useParams } from 'react-router-dom';
 
-export default function Comment() {
+export default function Comment({reviewId}) {
+  console.log(reviewId)
+  const { id } = useParams();
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [comment, setComment] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,7 +20,7 @@ export default function Comment() {
     event.preventDefault();
     try {
       setIsSubmitting(true);
-      const response = await createComment(comment);
+      const response = await createComment(id, reviewId, {content: comment, anonymous: isAnonymous});
       if (response.status === 200) {
       } else {
       }

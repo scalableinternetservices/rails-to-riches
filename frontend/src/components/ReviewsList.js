@@ -25,10 +25,14 @@ function ReviewsList({ reviews }) {
           <CardContent>
             <Grid container spacing={2}>
               <Grid item>
-                <Avatar>{review.user_name.charAt(0)}</Avatar>
+                <Avatar>
+                  {review.user_name ? review.user_name.charAt(0) : "A"}
+                </Avatar>
               </Grid>
               <Grid item xs>
-                <Typography variant="h6">{review.user_name}</Typography>
+                <Typography variant="h6">
+                  {review.user_name ?? "Anonymous"}
+                </Typography>
                 <Rating value={review.rating} readOnly />
               </Grid>
             </Grid>
@@ -46,26 +50,25 @@ function ReviewsList({ reviews }) {
                       sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
                     >
                       <Avatar sx={{ width: 24, height: 24, mr: 1 }}>
-                        {comment.user_name.charAt(0)}
+                        {comment.user_name ? comment.user_name.charAt(0) : "A"}
                       </Avatar>
                       <Box>
                         <Typography variant="subtitle2">
-                          {comment.user_name}
+                          {comment.user_name ?? "Anonymous"}
                         </Typography>
                         <Typography variant="body2">
                           {comment.content}
                         </Typography>
                       </Box>
                     </Box>
-                    
                   </>
                 ))}
               </Box>
             )}
-            <Link onClick={handleClick} tabIndex={0} component="button">
-                      Reply
-                    </Link>
-                    {showComment && <Comment />}
+            <Link onClick={handleClick} component="button">
+              Reply
+            </Link>
+            {showComment && <Comment reviewId={review.id}/>}
           </CardContent>
         </Card>
       ))}
