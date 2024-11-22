@@ -14,7 +14,7 @@ function Home() {
           bgcolor: "background.default",
           p: 2,
           borderRadius: 2,
-          boxShadow: 3,
+          boxShadow: 0,
           textAlign: "center",
         }}
       >

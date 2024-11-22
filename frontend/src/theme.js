@@ -5,7 +5,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     background: {
-      default: '#E2E9F3', // Global Background Color
+      default: '#FFFFFF', // Global Background Color
     },
     primary: {
       main: '#2F5972', // Buttons / Navbar Color
