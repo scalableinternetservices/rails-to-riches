@@ -18,9 +18,19 @@ const api = axios.create({
 // Function to set or remove the Authorization header
 export const setAuthToken = (token) => {
   if (token) {
+    console.log("Setting auth header")
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
+    console.log("Removing auth header")
     delete api.defaults.headers.common["Authorization"];
+  }
+};
+
+// Function to initialize auth token from localStorage
+export const initializeAuthToken = () => {
+  const tokens = JSON.parse(localStorage.getItem("tokens"));
+  if (tokens) {
+    setAuthToken(tokens);
   }
 };
 

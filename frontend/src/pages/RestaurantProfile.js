@@ -1,59 +1,110 @@
 // src/pages/RestaurantProfile.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { mockRestaurant } from '../data/mockData';
-
-import { Container, Typography, Box, Grid, Chip, Link } from '@mui/material';
+import { Container, Typography, Box, Chip, Link, CircularProgress } from '@mui/material';
+import Rating from '@mui/material/Rating';
 
 import PhotoGallery from '../components/PhotoGallery';
 import DishesList from '../components/DishesList';
 import ReviewsList from '../components/ReviewsList';
-import Rating from '@mui/material/Rating'; // Import Rating component
+
+import { getRestaurant, listReviews, listComments, listDishes, listPhotos } from '../services/api'; // Import API functions
 
 function RestaurantProfile() {
   const { id } = useParams();
+  const [restaurant, setRestaurant] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [dishes, setDishes] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // For now, using mock data
-  const restaurant = mockRestaurant; // Replace with fetched data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch restaurant details
+        const restaurantResponse = await getRestaurant(id);
+        setRestaurant(restaurantResponse.data);
 
-  // Calculate average rating
+        // Fetch reviews and comments
+        const reviewsResponse = await listReviews(id);
+        const reviewsWithComments = await Promise.all(
+          reviewsResponse.data.map(async (review) => {
+            const commentsResponse = await listComments(id, review.id);
+            return {
+              ...review,
+              comments: commentsResponse.data,
+            };
+          })
+        );
+        setReviews(reviewsWithComments);
+
+        // Fetch dishes
+        const dishesResponse = await listDishes(id);
+        setDishes(dishesResponse.data);
+
+        // Fetch photos
+        const photosResponse = await listPhotos(id);
+        setPhotos(photosResponse.data);
+
+      } catch (err) {
+        setError('Failed to load restaurant data');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
   const calculateAverageRating = (reviews) => {
     if (reviews.length === 0) return 0;
     const total = reviews.reduce((acc, review) => acc + review.rating, 0);
     return total / reviews.length;
   };
 
-  const averageRating = calculateAverageRating(restaurant.reviews);
-  const roundedAverageRating = Math.round(averageRating * 10) / 10; // Round to one decimal
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
+
+  const averageRating = calculateAverageRating(reviews);
+  const roundedAverageRating = Math.round(averageRating * 10) / 10;
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        mt: 4,
-        mb: 4,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, display: 'flex', flexDirection: 'column' }}>
       {/* Restaurant Header */}
       <Box sx={{ mb: 4 }}>
-        {/* Parent Box with Flex Layout */}
         <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
           <Typography variant="h3" component="h1" gutterBottom>
             {restaurant.name}
           </Typography>
-          {/* Average Rating */}
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: { xs: 1, sm: 0 } }}>
             <Rating
               name="average-rating"
               value={averageRating}
               precision={0.1}
               readOnly
-              sx={{ color: '#FFD700', fontSize: '1.5rem' }} // Gold color and larger stars
+              sx={{ color: '#FFD700', fontSize: '1.5rem' }}
             />
             <Typography variant="h6" sx={{ ml: 1 }}>
-              {roundedAverageRating} ({restaurant.reviews.length} review{restaurant.reviews.length !== 1 ? 's' : ''})
+              {roundedAverageRating} ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
             </Typography>
           </Box>
         </Box>
@@ -81,7 +132,7 @@ function RestaurantProfile() {
         <Typography variant="h4" gutterBottom>
           Photo Gallery
         </Typography>
-        <PhotoGallery photos={restaurant.photos} />
+        <PhotoGallery photos={photos} />
       </Box>
 
       {/* Dishes List */}
@@ -89,7 +140,7 @@ function RestaurantProfile() {
         <Typography variant="h4" gutterBottom>
           Our Dishes
         </Typography>
-        <DishesList dishes={restaurant.dishes} />
+        <DishesList dishes={dishes} />
       </Box>
 
       {/* Reviews List */}
@@ -97,7 +148,7 @@ function RestaurantProfile() {
         <Typography variant="h4" gutterBottom>
           Reviews
         </Typography>
-        <ReviewsList reviews={restaurant.reviews} />
+        <ReviewsList reviews={reviews} />
       </Box>
     </Container>
   );

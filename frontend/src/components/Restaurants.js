@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
-import { listRestaurants, fetchPrimaryPhoto, deletePhoto } from '../services/api';
+import { Link } from 'react-router-dom';  // Import Link from react-router-dom
+import { listRestaurants, fetchPrimaryPhoto } from '../services/api';
 
 function Restaurants() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -64,25 +65,27 @@ function Restaurants() {
       <Grid container spacing={3}>
         {filteredRestaurants.map((restaurant) => (
           <Grid item xs={12} sm={6} md={4} key={restaurant.id}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="140"
-                image={restaurant.image_url || 'https://via.placeholder.com/300x140?text=' + restaurant.name.replaceAll(' ', '+')}
-                alt={restaurant.name}
-              />
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  {restaurant.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {restaurant.city}, {restaurant.state}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" mt={1}>
-                  {restaurant.description}
-                </Typography>
-              </CardContent>
-            </Card>
+            <Link to={`/restaurants/${restaurant.id}`} style={{ textDecoration: 'none' }}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={restaurant.image_url || 'https://via.placeholder.com/300x140?text=' + restaurant.name.replaceAll(' ', '+')}
+                  alt={restaurant.name}
+                />
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    {restaurant.name}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {restaurant.city}, {restaurant.state}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" mt={1}>
+                    {restaurant.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>

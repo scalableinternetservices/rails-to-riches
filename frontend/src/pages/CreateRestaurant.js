@@ -1,5 +1,7 @@
+// src/pages/CreateRestaurant.js
 import React, { useState } from "react";
 import { TextField, Button, Grid, Box, Typography, Container } from "@mui/material";
+import { createRestaurant, createPhoto } from "../services/api"; // Import API functions
 
 export default function CreateRestaurant() {
   const [formData, setFormData] = useState({
@@ -13,7 +15,9 @@ export default function CreateRestaurant() {
     website: "",
     photo: null,
   });
-  //   const [photoError, setPhotoError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,11 +30,6 @@ export default function CreateRestaurant() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      //   if (file.size > 1 * 1024 * 1024) {
-      //     setPhotoError("File size must be less than 1MB.");
-      //     return;
-      //   }
-      //   setPhotoError("");
       setFormData((prev) => ({
         ...prev,
         photo: file,
@@ -38,9 +37,43 @@ export default function CreateRestaurant() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted Data:", formData);
+    setLoading(true);
+    setError(null);
+    setSuccessMessage("");
+
+    try {
+      // Create the restaurant
+      const restaurantResponse = await createRestaurant({
+        name: formData.name,
+        description: formData.description,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        zip: formData.zip,
+        website: formData.website,
+      });
+
+      const restaurantId = restaurantResponse.data.id;
+
+      // Upload the primary photo
+      if (formData.photo) {
+        const formDataPhoto = new FormData();
+        formDataPhoto.append("photo[image]", formData.photo);
+        formDataPhoto.append("photo[primary]", true);
+
+        await createPhoto(restaurantId, formDataPhoto);
+      }
+
+      setSuccessMessage("Restaurant created successfully!");
+    } catch (err) {
+      setError("Failed to create restaurant. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,6 +90,16 @@ export default function CreateRestaurant() {
         <Typography variant="h4" gutterBottom>
           Create Restaurant
         </Typography>
+        {error && (
+          <Typography color="error" variant="body2" gutterBottom>
+            {error}
+          </Typography>
+        )}
+        {successMessage && (
+          <Typography color="success" variant="body2" gutterBottom>
+            {successMessage}
+          </Typography>
+        )}
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -153,11 +196,6 @@ export default function CreateRestaurant() {
                   onChange={handleFileChange}
                 />
               </Button>
-              {/* {photoError && (
-              <Typography color="error" variant="body2">
-                {photoError}
-              </Typography>
-            )} */}
               {formData.photo && (
                 <Typography variant="body2" sx={{ marginTop: 1 }}>
                   Selected: {formData.photo.name}
@@ -170,8 +208,9 @@ export default function CreateRestaurant() {
                 variant="contained"
                 color="primary"
                 fullWidth
+                disabled={loading}
               >
-                Submit
+                {loading ? "Submitting..." : "Submit"}
               </Button>
             </Grid>
           </Grid>

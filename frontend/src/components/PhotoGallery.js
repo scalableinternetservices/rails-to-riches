@@ -16,9 +16,9 @@ function PhotoGallery({ photos }) {
       {photos.map((photo, index) => (
         <ImageListItem key={index}>
           <img
-            src={`${photo}?w=248&fit=crop&auto=format`}
-            srcSet={`${photo}?w=248&fit=crop&auto=format&dpr=2 2x`}
-            alt={`Restaurant Photo ${index + 1}`}
+            src={`${photo.image_url}?w=248&fit=crop&auto=format`}
+            srcSet={`${photo.image_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+            alt={`Img ${index + 1}`}
             loading="lazy"
             style={{
               width: '100%',

@@ -16,7 +16,7 @@ function DishesList({ dishes }) {
                 {dish.description}
               </Typography>
               <Box sx={{ mt: 2 }}>
-                <Chip label={`Price: $${dish.price.toFixed(2)}`} />
+                <Chip label={`Price: $${dish.price}`} />
               </Box>
             </CardContent>
           </Card>

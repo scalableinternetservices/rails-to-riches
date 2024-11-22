@@ -19,10 +19,10 @@ function ReviewsList({ reviews }) {
           <CardContent>
             <Grid container spacing={2}>
               <Grid item>
-                <Avatar>{review.user.charAt(0)}</Avatar>
+                <Avatar>{review.user_name.charAt(0)}</Avatar>
               </Grid>
               <Grid item xs>
-                <Typography variant="h6">{review.user}</Typography>
+                <Typography variant="h6">{review.user_name}</Typography>
                 <Rating value={review.rating} readOnly />
               </Grid>
             </Grid>
@@ -35,9 +35,9 @@ function ReviewsList({ reviews }) {
                 <Divider sx={{ mb: 2 }} />
                 {review.comments.map((comment) => (
                   <Box key={comment.id} sx={{ display: 'flex', alignItems: 'flex-start', mb: 1 }}>
-                    <Avatar sx={{ width: 24, height: 24, mr: 1 }}>{comment.user.charAt(0)}</Avatar>
+                    <Avatar sx={{ width: 24, height: 24, mr: 1 }}>{comment.user_name.charAt(0)}</Avatar>
                     <Box>
-                      <Typography variant="subtitle2">{comment.user}</Typography>
+                      <Typography variant="subtitle2">{comment.user_name}</Typography>
                       <Typography variant="body2">{comment.content}</Typography>
                     </Box>
                   </Box>

@@ -52,7 +52,7 @@ function App() {
           }
         />
 
-<Route
+        <Route
           path="/restaurants/:id"
           element={
             <PrivateRoute>
