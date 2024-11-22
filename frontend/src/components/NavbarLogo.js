@@ -1,20 +1,18 @@
-// src/components/Logo.js
+// src/components/NavbarLogo.js
 import React from "react";
 import { NavLink } from "react-router-dom";
-
+import logo from "../assets/logo.png"; 
 function NavbarLogo({ width = 80, height = 42 }) {
   return (
-    <NavLink
-      to="/"
-      children={
-        <img
-          src="https://i.hizliresim.com/osre0t5.jpg"
-          alt="Gaucho Eats Logo"
-          width={width}
-          height={height}
-        />
-      }
-    />
+    <NavLink to="/">
+      <img
+        src={logo}
+        alt="Gaucho Eats Logo"
+        width={width}
+        height={height}
+        style={{ objectFit: "contain" }}
+      />
+    </NavLink>
   );
 }
 
