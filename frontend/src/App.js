@@ -10,6 +10,7 @@ import Review from "./pages/Review";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
 import CreateRestaurant from "./pages/CreateRestaurant";
+import RestaurantProfile from "./pages/RestaurantProfile";
 
 function App() {
   return (
@@ -50,6 +51,16 @@ function App() {
             </PrivateRoute>
           }
         />
+
+<Route
+          path="/restaurants/:id"
+          element={
+            <PrivateRoute>
+              <RestaurantProfile />
+            </PrivateRoute>
+          }
+        />
+        
 
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
