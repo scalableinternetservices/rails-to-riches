@@ -50,7 +50,7 @@ module Api
     private
 
     def review_params
-      params.require(:review).permit(:rating, :content) # Do not pass user_id, it's handled by @user
+      params.require(:review).permit(:rating, :content, :anonymous) # Do not pass user_id, it's handled by @user
     end
   end
 end

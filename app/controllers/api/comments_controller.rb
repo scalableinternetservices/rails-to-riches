@@ -50,7 +50,7 @@ module Api
     private
 
     def comment_params
-      params.require(:comment).permit(:content)  # No user_id here, it's handled by @user
+      params.require(:comment).permit(:content, :anonymous)  # No user_id here, it's handled by @user
     end
   end
 end
