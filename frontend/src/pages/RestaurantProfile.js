@@ -5,6 +5,7 @@ import {
   Container,
   Typography,
   Box,
+  Button,
   Chip,
   Link,
   CircularProgress,
@@ -23,6 +24,7 @@ import {
   listPhotos,
 } from "../services/api"; // Import API functions
 import Review from "./Review";
+import AddDishes from "../components/AddDishes";
 
 function RestaurantProfile() {
   const { id } = useParams();
@@ -33,6 +35,7 @@ function RestaurantProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reload, setReload] = useState(false);
+  const [showDishForm, setShowDishForm] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -171,7 +174,26 @@ function RestaurantProfile() {
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom>
           Our Dishes
+          
+            <Button
+              color="secondary"
+              onClick={() => {
+                setShowDishForm(!showDishForm);
+              }}
+              sx={{
+                bgcolor: "primary.main",
+                color: "error.contrastText",
+                padding: 1,
+                "&:hover": {
+                  bgcolor: "error.dark",
+                },
+                margin: "20px",
+              }}
+            >
+              {!showDishForm ? "Add Dish" : "Cancel"}
+            </Button>
         </Typography>
+        {showDishForm && <AddDishes />}
         <DishesList dishes={dishes} />
       </Box>
 
