@@ -7,7 +7,7 @@ import StarIcon from "@mui/icons-material/Star";
 import Grid from "@mui/material/Grid2";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import { addReview } from "../services/api";
+import { createReview } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
 import BasicDialog from "../components/BasicDialog";
 import Comment from "../components/Comment";
@@ -34,7 +34,7 @@ export default function Review() {
     event.preventDefault();
     try {
       setIsSubmitting(true);
-      const response = await addReview(rating, content, isAnonymous);
+      const response = await createReview(rating, content, isAnonymous);
       if (response.status === 200) {
         setOpen(true);
       } else {

@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import { addComment } from "../services/api";
+import { createComment } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
 
 export default function Comment() {
@@ -17,7 +17,7 @@ export default function Comment() {
     event.preventDefault();
     try {
       setIsSubmitting(true);
-      const response = await addComment(comment, isAnonymous);
+      const response = await createComment(comment);
       if (response.status === 200) {
       } else {
       }

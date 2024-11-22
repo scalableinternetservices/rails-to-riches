@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
-import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Rating, Container } from '@mui/material';
-import mockRestaurants from '../utilities/mockRestaurants.json'
+import React, { useState, useEffect } from 'react';
+import { Box, TextField, Grid, Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
+import { listRestaurants } from '../services/api'; // Import the listRestaurants API function
 
 function Restaurants() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredRestaurants, setFilteredRestaurants] = useState(mockRestaurants);
+  const [restaurants, setRestaurants] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+
+  useEffect(() => {
+    // Fetch the list of restaurants when the component mounts
+    const fetchRestaurants = async () => {
+      try {
+        const response = await listRestaurants();
+        setRestaurants(response.data);
+        setFilteredRestaurants(response.data);
+      } catch (error) {
+        console.error('Error fetching restaurants:', error);
+      }
+    };
+
+    fetchRestaurants();
+  }, []);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
     setFilteredRestaurants(
-      mockRestaurants.filter((restaurant) =>
+      restaurants.filter((restaurant) =>
         restaurant.name.toLowerCase().includes(query)
       )
     );
@@ -36,7 +52,7 @@ function Restaurants() {
               <CardMedia
                 component="img"
                 height="140"
-                image={restaurant.image_url || 'https://via.placeholder.com/300x140'}
+                image={restaurant.image_url || 'https://via.placeholder.com/300x140?text='+restaurant.name.replaceAll(' ', '+')}
                 alt={restaurant.name}
               />
               <CardContent>
@@ -46,12 +62,6 @@ function Restaurants() {
                 <Typography variant="body2" color="textSecondary">
                   {restaurant.city}, {restaurant.state}
                 </Typography>
-                <Box display="flex" alignItems="center" mt={1}>
-                  <Rating value={restaurant.rating || 0} readOnly />
-                  <Typography variant="body2" sx={{ ml: 1 }}>
-                    ({restaurant.reviews_count || 0} reviews)
-                  </Typography>
-                </Box>
                 <Typography variant="body2" color="textSecondary" mt={1}>
                   {restaurant.description}
                 </Typography>
