@@ -9,6 +9,7 @@ import PostDetail from "./pages/PostDetail";
 import Review from "./pages/Review";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
+import CreateRestaurant from "./pages/CreateRestaurant";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/createRestaurant" element={<CreateRestaurant />} />
       </Routes>
     </Router>
   );
