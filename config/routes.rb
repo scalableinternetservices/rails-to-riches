@@ -12,6 +12,7 @@ Rails.application.routes.draw do
         resources :comments, only: [:index, :create]
       end
       resources :photos, only: [:index, :create]
+      get 'primary_photo', to: 'photos#primary_photo'
       resources :dishes, only: [:index, :create]
     end
     resources :reviews, only: [:show, :update, :destroy]

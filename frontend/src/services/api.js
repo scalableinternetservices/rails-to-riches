@@ -159,6 +159,11 @@ export const deleteComment = (id) => {
   return api.delete(`/api/comments/${id}`);
 };
 
+// Primary photo
+export const fetchPrimaryPhoto = async (restaurantId) => {
+  return api.get(`/api/restaurants/${restaurantId}/primary_photo`);
+};
+
 // List Photos
 export const listPhotos = (restaurantId) => {
   return api.get(`/api/restaurants/${restaurantId}/photos`);
