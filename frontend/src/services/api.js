@@ -1,19 +1,18 @@
 // src/services/api.js
 import axios from "axios";
 
-// Base URL for your Rails backend
-const BASE_URL =
-  process.env.REACT_APP_RAILS_ENDPOINT || "http://localhost:3000";
-
 // Create an Axios instance with default configurations
 const api = axios.create({
-  baseURL: BASE_URL,
   withCredentials: true, // Allows sending cookies and other credentials
   headers: {
     "Content-Type": "application/json", // Sends data as JSON
     Accept: "application/json", // Expects JSON responses
   },
 });
+
+if (process.env.REACT_APP_RAILS_ENDPOINT) {
+    axios.defaults.baseURL = process.env.REACT_APP_RAILS_ENDPOINT;
+  }
 
 // Function to set or remove the Authorization header
 export const setAuthToken = (token) => {

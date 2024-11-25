@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsung loglevel="notice">
+  <clients>
+    <!-- Define client machines; localhost is used for simplicity -->
+    <client host="localhost" use_controller_vm="true" />
+  </clients>
+
+  <servers>
+    <!-- Define the target server -->
+    <server host="your.api.server" port="80" type="tcp" />
+  </servers>
+
+  <load>
+    <!-- Define the load profile with phases -->
+    <arrivalphase phase="1" duration="60" unit="second">
+      <users unit="second">10</users> <!-- 10 users/sec for 60 seconds -->
+    </arrivalphase>
+    <arrivalphase phase="2" duration="60" unit="second">
+      <users unit="second">20</users> <!-- Ramp up to 20 users/sec -->
+    </arrivalphase>
+    <arrivalphase phase="3" duration="60" unit="second">
+      <users unit="second">30</users> <!-- Ramp up to 30 users/sec -->
+    </arrivalphase>
+  </load>
+
+  <sessions>
+    <!-- Define a session named "get_restaurants" -->
+    <session name="get_restaurants" probability="100" type="ts_http">
+      
+      <!-- GET request to /api/restaurants -->
+      <request>
+        <http url="/api/restaurants" method="GET">
+          <!-- Optional: Add headers if required -->
+          <!--
+          <http_header name="Authorization" value="Bearer your_jwt_token_here" />
+          -->
+        </http>
+      </request>
+
+      <!-- Think time between requests -->
+      <thinktime value="1" />
+    </session>
+  </sessions>
+</tsung>
