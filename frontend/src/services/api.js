@@ -11,16 +11,16 @@ const api = axios.create({
 });
 
 if (process.env.REACT_APP_RAILS_ENDPOINT) {
-    axios.defaults.baseURL = process.env.REACT_APP_RAILS_ENDPOINT;
-  }
+  api.defaults.baseURL = process.env.REACT_APP_RAILS_ENDPOINT;
+}
 
 // Function to set or remove the Authorization header
 export const setAuthToken = (token) => {
   if (token) {
-    console.log("Setting auth header")
+    console.log("Setting auth header");
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
-    console.log("Removing auth header")
+    console.log("Removing auth header");
     delete api.defaults.headers.common["Authorization"];
   }
 };
@@ -100,7 +100,9 @@ export const listDishes = (restaurantId) => {
 
 // Create Dish
 export const createDish = (restaurantId, dishData) => {
-  return api.post(`/api/restaurants/${restaurantId}/dishes`, { dish: dishData });
+  return api.post(`/api/restaurants/${restaurantId}/dishes`, {
+    dish: dishData,
+  });
 };
 
 // Get Dish
@@ -125,7 +127,9 @@ export const listReviews = (restaurantId) => {
 
 // Create Review
 export const createReview = (restaurantId, reviewData) => {
-  return api.post(`/api/restaurants/${restaurantId}/reviews`, { review: reviewData });
+  return api.post(`/api/restaurants/${restaurantId}/reviews`, {
+    review: reviewData,
+  });
 };
 
 // Get Review
@@ -145,12 +149,17 @@ export const deleteReview = (id) => {
 
 // List Comments
 export const listComments = (restaurantId, reviewId) => {
-  return api.get(`/api/restaurants/${restaurantId}/reviews/${reviewId}/comments`);
+  return api.get(
+    `/api/restaurants/${restaurantId}/reviews/${reviewId}/comments`
+  );
 };
 
 // Create Comment
 export const createComment = (restaurantId, reviewId, commentData) => {
-  return api.post(`/api/restaurants/${restaurantId}/reviews/${reviewId}/comments`, { comment: commentData });
+  return api.post(
+    `/api/restaurants/${restaurantId}/reviews/${reviewId}/comments`,
+    { comment: commentData }
+  );
 };
 
 // Get Comment
@@ -206,4 +215,4 @@ export const deletePhoto = (id) => {
   return api.delete(`/api/photos/${id}`);
 };
 
-export default api;// src/services/api.js
+export default api; // src/services/api.js
