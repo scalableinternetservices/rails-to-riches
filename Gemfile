@@ -4,7 +4,7 @@ ruby "3.2.2"
 
 gem 'active_model_serializers'
 
-gem 'aws-sdk-s3', '~> 1.0'
+gem 'aws-sdk-s3', '~> 1.174'
 
 gem "bcrypt", "~> 3.1.7"
 
