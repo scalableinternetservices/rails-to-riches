@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.js": "/rails-to-riches/static/js/main.2456a01e.js",
+    "static/media/logo.png": "/rails-to-riches/static/media/logo.ba8d895a509b2fbe099b.png",
+    "index.html": "/rails-to-riches/index.html",
+    "main.2456a01e.js.map": "/rails-to-riches/static/js/main.2456a01e.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.2456a01e.js"
+  ]
+}
