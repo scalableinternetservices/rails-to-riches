@@ -1,11 +1,11 @@
 // src/pages/RestaurantProfile.js
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import { AuthContext } from "../AuthContext";
 import { useParams } from "react-router-dom";
 import {
   Container,
   Typography,
   Box,
-  Button,
   Chip,
   Link,
   CircularProgress,
@@ -34,6 +34,7 @@ function RestaurantProfile() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useContext(AuthContext);
 
   const fetchData = useCallback(async () => {
     try {
@@ -69,7 +70,6 @@ function RestaurantProfile() {
       setLoading(false);
     }
   }, [id]);
-  const [showDishForm, setShowDishForm] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -101,7 +101,8 @@ function RestaurantProfile() {
 
   const averageRating = calculateAverageRating(reviews);
   const roundedAverageRating = Math.round(averageRating * 10) / 10;
-
+  console.log(restaurant);
+  console.log(user);
   return (
     <Container
       maxWidth="lg"
@@ -169,27 +170,9 @@ function RestaurantProfile() {
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom>
           Our Dishes
-          
-            <Button
-              color="secondary"
-              onClick={() => {
-                setShowDishForm(!showDishForm);
-              }}
-              sx={{
-                bgcolor: "primary.main",
-                color: "error.contrastText",
-                padding: 1,
-                "&:hover": {
-                  bgcolor: "error.dark",
-                },
-                margin: "20px",
-              }}
-            >
-              {!showDishForm ? "Add Dish" : "Cancel"}
-            </Button>
         </Typography>
-        {showDishForm && <AddDishes />}
         <DishesList dishes={dishes} />
+        {restaurant?.user_id === user?.id && <AddDishes />}
       </Box>
 
       {/* Reviews List */}
