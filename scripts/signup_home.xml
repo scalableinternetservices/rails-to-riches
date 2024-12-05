@@ -41,7 +41,7 @@
       <!-- Access Dashboard -->
       <request>
         <http url="/api/restaurants" method="GET">
-          <http_header name="Authorization" value="Bearer ${jwt}" />
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
         </http>
       </request>
       <thinktime value="1" />
