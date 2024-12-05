@@ -9,9 +9,9 @@
   </servers>
   <load>
     <arrivalphase phase="1" duration="100" unit="second">
-      <users arrivalrate="1" unit="minute"></users>
+      <users arrivalrate="1" unit="second"></users>
     </arrivalphase>
-    <!-- <arrivalphase phase="2" duration="100" unit="second">
+    <arrivalphase phase="2" duration="100" unit="second">
       <users arrivalrate="2" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="3" duration="100" unit="second">
@@ -22,7 +22,7 @@
     </arrivalphase>
     <arrivalphase phase="5" duration="100" unit="second">
       <users arrivalrate="16" unit="second"></users>
-    </arrivalphase> -->
+    </arrivalphase>
   </load>
   <sessions>
     <session name="photo_gallery_browsing_and_uploading" probability="100" type="ts_http">
@@ -53,7 +53,7 @@
         <thinktime value="1" />
 
         <!-- Upload a New Photo -->
-        <request subst="true">
+        <request subst="all_except_body">
           <http url="/api/restaurants/%%_restaurant_id%%/photos" method="POST" contents_from_file="./photo_form.bin">
             <http_header name="Content-Type" value="multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" />
             <http_header name="Authorization" value="Bearer %%_jwt%%" />
