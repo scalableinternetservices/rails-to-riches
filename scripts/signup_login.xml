@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" []>
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" use_controller_vm="true" />
+  </clients>
+
+  <servers>
+    <server host="localhost" port="3000" type="tcp" />
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="60" unit="second">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="60" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="60" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="60" unit="second">
+      <users arrivalrate="8" unit="second"></users>
+    </arrivalphase>
+  </load>
+
+  <sessions>
+    <session name="signup_login" probability="100" type="ts_http">
+      
+      <request>
+        <http url="/api/signup" method="POST" contents_from_file="./signupUnique.json">
+          <http_header name="Content-Type" value="application/json" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <request subst="true">
+        <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
+        <http url="/api/login" method="POST" contents_from_file="./loginUnique.json">
+          <http_header name="Content-Type" value="application/json" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <request>
+        <http url="/api/restaurants" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <request>
+        <http url="/api/logout" method="POST">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+    </session>
+  </sessions>
+</tsung>

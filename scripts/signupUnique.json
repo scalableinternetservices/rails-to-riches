@@ -1,0 +1,9 @@
+{
+    "user": {
+      "name": "Test User %%_user_id%%",
+      "email": "testuser%%_user_id%%@example.com",
+      "password": "Password123",
+      "password_confirmation": "Password123"
+    }
+  }
+  
