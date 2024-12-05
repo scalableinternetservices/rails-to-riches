@@ -49,11 +49,6 @@
       </request>
       <thinktime value="1" />
 
-      <request>
-        <http url="/api/logout" method="POST">
-          <http_header name="Authorization" value="Bearer %%_jwt%%" />
-        </http>
-      </request>
     </session>
   </sessions>
 </tsung>

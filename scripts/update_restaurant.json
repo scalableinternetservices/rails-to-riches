@@ -1,0 +1,7 @@
+{
+    "restaurant": {
+      "description": "Updated description for the restaurant.",
+      "phone_number": "098-765-4321",
+      "website": "http://updatedrestaurant.com"
+    }
+}

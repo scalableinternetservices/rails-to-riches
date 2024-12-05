@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" []>
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" use_controller_vm="true" />
+  </clients>
+  <servers>
+    <server host="rails-to-riches.eba-viwn7vp8.us-west-2.elasticbeanstalk.com" port="80" type="tcp" />
+  </servers>
+  <load>
+    <arrivalphase phase="1" duration="100" unit="second">
+      <users arrivalrate="1" unit="minute"></users>
+    </arrivalphase>
+    <!-- <arrivalphase phase="2" duration="100" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="100" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="100" unit="second">
+      <users arrivalrate="8" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="100" unit="second">
+      <users arrivalrate="16" unit="second"></users>
+    </arrivalphase> -->
+  </load>
+  <sessions>
+    <session name="photo_gallery_browsing_and_uploading" probability="100" type="ts_http">
+      <!-- User Login -->
+      <request subst="true">
+        <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
+        <http url="/api/login" method="POST" contents_from_file="./login.json">
+          <http_header name="Content-Type" value="application/json" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <!-- Navigate to a Specific Restaurant's Detail Page -->
+      <for var="restaurant_id" from="1" to="3" incr="1">
+        <request subst="true">
+          <http url="/api/restaurants/%%_restaurant_id%%" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+        <thinktime value="1" />
+
+        <!-- Access the Photo Gallery Section -->
+        <request subst="true">
+          <http url="/api/restaurants/%%_restaurant_id%%/photos" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+        <thinktime value="1" />
+
+        <!-- Upload a New Photo -->
+        <request subst="true">
+          <http url="/api/restaurants/%%_restaurant_id%%/photos" method="POST" contents_from_file="./photo_form.bin">
+            <http_header name="Content-Type" value="multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" />
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+        <thinktime value="1" />
+
+        <!-- View Updated Photo Gallery -->
+        <request subst="true">
+          <http url="/api/restaurants/%%_restaurant_id%%/photos" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+        <thinktime value="1" />
+      </for>
+    </session>
+  </sessions>
+</tsung>

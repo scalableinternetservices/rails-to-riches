@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" []>
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" use_controller_vm="true" />
+  </clients>
+  <servers>
+    <server host="rails-to-riches.eba-viwn7vp8.us-west-2.elasticbeanstalk.com" port="80" type="tcp" />
+  </servers>
+  <load>
+    <arrivalphase phase="1" duration="120" unit="second">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="120" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="120" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="120" unit="second">
+      <users arrivalrate="8" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="120" unit="second">
+      <users arrivalrate="16" unit="second"></users>
+    </arrivalphase>
+  </load>
+  <sessions>
+    <session name="manage_restaurant_profile" probability="100" type="ts_http">
+      <!-- Business Owner Login -->
+      <request subst="true">
+        <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
+        <http url="/api/login" method="POST" contents_from_file="./login.json">
+          <http_header name="Content-Type" value="application/json" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <!-- Navigate to Business Dashboard (View All Restaurants) -->
+      <request>
+        <http url="/api/restaurants" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <!-- Create a New Restaurant -->
+      <request subst="true">
+        <dyn_variable name="id" re='\"id\":([0-9]+)' />
+        <http url="/api/restaurants" method="POST" contents_from_file="./create_restaurant.json">
+          <http_header name="Content-Type" value="application/json" />
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+       <!-- View Specific Restaurant Details -->
+       <request subst="true">
+           <http url="/api/restaurants/%%_id%%" method="GET">
+           <http_header name="Authorization" value="Bearer %%_jwt%%" />
+           </http>
+       </request>
+       <thinktime value="1" />
+
+       <!-- Update Restaurant Information -->
+       <request subst="true">
+           <http url="/api/restaurants/%%_id%%" method="PUT" contents_from_file="./update_restaurant.json">
+           <http_header name="Content-Type" value="application/json" />
+           <http_header name="Authorization" value="Bearer %%_jwt%%" />
+           </http>
+       </request>
+       <thinktime value="1" />
+       <!-- Add Dishes to the Restaurant -->
+       <request subst="true">
+           <http url="/api/restaurants/%%_id%%/dishes" method="POST" contents_from_file="./add_dish.json">
+           <http_header name="Content-Type" value="application/json" />
+           <http_header name="Authorization" value="Bearer %%_jwt%%" />
+           </http>
+       </request>
+       <thinktime value="1" />
+
+    </session>
+  </sessions>
+</tsung>

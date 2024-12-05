@@ -1,0 +1,7 @@
+{
+    "dish": {
+      "name": "New Dish",
+      "description": "A delicious new dish.",
+      "price": 12.99
+    }
+}

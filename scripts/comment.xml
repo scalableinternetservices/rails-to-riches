@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" []>
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" use_controller_vm="true" />
+  </clients>
+  <servers>
+    <server host="rails-to-riches.eba-viwn7vp8.us-west-2.elasticbeanstalk.com" port="80" type="tcp" />
+  </servers>
+  <load>
+    <arrivalphase phase="1" duration="75" unit="second">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="75" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="75" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="75" unit="second">
+      <users arrivalrate="8" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="75" unit="second">
+      <users arrivalrate="16" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="6" duration="75" unit="second">
+      <users arrivalrate="32" unit="second"></users>
+    </arrivalphase>
+  </load>
+  <sessions>
+    <session name="reply_to_comments" probability="100" type="ts_http">
+      <!-- Business Owner Login -->
+      <request subst="true">
+        <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
+        <http url="/api/login" method="POST" contents_from_file="./login.json">
+          <http_header name="Content-Type" value="application/json" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <!-- Navigate to Business Dashboard (View All Restaurants) -->
+      <request>
+        <http url="/api/restaurants" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <!-- Loop over known restaurant IDs -->
+      <for var="restaurant_id" from="1" to="15" incr="1">
+
+        <!-- View Specific Restaurant Reviews -->
+        <request subst="true">
+          <http url="/api/restaurants/%%_restaurant_id%%/reviews" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+        <thinktime value="1" />
+
+        <!-- Loop over known review IDs -->
+        <for var="review_id" from="1" to="3" incr="1">
+
+          <!-- View Comments for a Specific Review -->
+          <request subst="true">
+            <http url="/api/restaurants/%%_restaurant_id%%/reviews/%%_review_id%%/comments" method="GET">
+              <http_header name="Authorization" value="Bearer %%_jwt%%" />
+            </http>
+          </request>
+          <thinktime value="1" />
+
+          <!-- Submit a Reply to a Comment -->
+          <request subst="true">
+            <http url="/api/restaurants/%%_restaurant_id%%/reviews/%%_review_id%%/comments" method="POST" contents_from_file="./comment.json">
+              <http_header name="Content-Type" value="application/json" />
+              <http_header name="Authorization" value="Bearer %%_jwt%%" />
+            </http>
+          </request>
+          <thinktime value="1" />
+
+        </for>
+      </for>
+    </session>
+  </sessions>
+</tsung>
