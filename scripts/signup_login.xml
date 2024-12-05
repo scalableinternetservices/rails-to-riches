@@ -27,7 +27,7 @@
   <sessions>
     <session name="signup_login" probability="100" type="ts_http">
       
-      <request>
+      <request subst="true">
         <http url="/api/signup" method="POST" contents_from_file="./signupUnique.json">
           <http_header name="Content-Type" value="application/json" />
         </http>
