@@ -3,6 +3,7 @@
     "name": "Test User %%ts_user_server:get_unique_id%%",
     "email": "testuser%%ts_user_server:get_unique_id%%@example.com",
     "password": "Password123",
-    "password_confirmation": "Password123"
+    "password_confirmation": "Password123",
+    "role": "business_owner"
   }
 }

@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="localhost" port="3000" type="tcp" />
+    <server host="rails-to-riches.eba-viwn7vp8.us-west-2.elasticbeanstalk.com" port="80" type="tcp" />
   </servers>
 
   <load>
@@ -28,7 +28,7 @@
     <session name="signup_login" probability="100" type="ts_http">
       
       <request subst="true">
-        <http url="/api/signup" method="POST" contents_from_file="./signupUnique.json">
+        <http url="/api/signup" method="POST" contents_from_file="./signup_unique.json">
           <http_header name="Content-Type" value="application/json" />
         </http>
       </request>
@@ -36,7 +36,7 @@
 
       <request subst="true">
         <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
-        <http url="/api/login" method="POST" contents_from_file="./loginUnique.json">
+        <http url="/api/login" method="POST" contents_from_file="./login_unique.json">
           <http_header name="Content-Type" value="application/json" />
         </http>
       </request>

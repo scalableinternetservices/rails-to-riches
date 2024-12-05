@@ -32,7 +32,7 @@
       <!-- User Signup -->
       <request subst="true">
       <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
-        <http url="/api/signup" method="POST" contents_from_file="./signup.json">
+        <http url="/api/signup" method="POST" contents_from_file="./signup_unique.json">
           <http_header name="Content-Type" value="application/json" />
         </http>
       </request>
