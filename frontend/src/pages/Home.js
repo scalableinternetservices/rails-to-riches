@@ -20,7 +20,7 @@ function Home() {
       >
         <Typography variant="h6">
           {user ? `Welcome, ${user.name}!` : "Welcome!"}
-          {user.role === "business_owner" && (
+          {user?.role === "business_owner" && (
             <Button
               color="secondary"
               component={Link}
