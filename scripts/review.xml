@@ -35,34 +35,55 @@
       </request>
       <thinktime value="1" />
 
-      <!-- Loop over known restaurant IDs -->
-      <for var="restaurant_id" from="1" to="15" incr="1">
+      <!-- View Specific Restaurant Details -->
+      <request subst="true">
+        <http url="/api/restaurants/1" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
 
-        <!-- View Specific Restaurant Details -->
+      <!-- View Dishes for the Restaurant -->
+      <request subst="true">
+        <http url="/api/restaurants/1/dishes" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+
+      <!-- View Photos for the Restaurant -->
+      <request>
+        <http url="/api/restaurants/1/photos" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <!-- View Reviews for the Restaurant -->
+      <request subst="true">
+        <http url="/api/restaurants/1/reviews" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+
+      <!-- View Comments for a Specific Review -->
+      <for var="review_id" from="1" to="3" incr="1">
         <request subst="true">
-          <http url="/api/restaurants/%%_restaurant_id%%" method="GET">
+          <http url="/api/restaurants/1/reviews/%%_review_id%%/comments" method="GET">
             <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
-        <thinktime value="1" />
-
-        <!-- Submit a Review -->
-        <request subst="true">
-          <http url="/api/restaurants/%%_restaurant_id%%/reviews" method="POST" contents_from_file="./review.json">
-            <http_header name="Content-Type" value="application/json" />
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
-          </http>
-        </request>
-        <thinktime value="1" />
-
-        <!-- Navigate Back to Dashboard (View All Restaurants) -->
-        <request>
-          <http url="/api/restaurants" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
-          </http>
-        </request>
-        <thinktime value="1" />
       </for>
+      <thinktime value="1" />
+
+      <!-- Submit a Review -->
+      <request subst="true">
+        <http url="/api/restaurants/1/reviews" method="POST" contents_from_file="./review.json">
+          <http_header name="Content-Type" value="application/json" />
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
     </session>
   </sessions>
 </tsung>
