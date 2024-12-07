@@ -9,6 +9,19 @@ module Api
       render json: @comments
     end
 
+    # GET /restaurants/:restaurant_id/reviews/:review_id/comments_paged
+    def paged_index
+      @review = Review.find(params[:review_id])
+      @comments = @review.comments.page(params[:page]).per(params[:per_page] || 5)
+
+      render json: {
+        comments: @comments,
+        current_page: @comments.current_page,
+        total_pages: @comments.total_pages,
+        total_count: @comments.total_count
+      }
+    end
+
     # GET /comments/:id
     def show
       @comment = Comment.find(params[:id])  # Find a specific comment by ID

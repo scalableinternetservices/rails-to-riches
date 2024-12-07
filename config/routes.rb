@@ -11,7 +11,9 @@ Rails.application.routes.draw do
     resources :restaurants do
       resources :reviews, only: [:index, :create] do
         resources :comments, only: [:index, :create]
+        get 'comments_paged', to: 'comments#paged_index'
       end
+      get 'reviews_paged', to: 'reviews#paged_index'
       resources :photos, only: [:index, :create]
       get 'primary_photo', to: 'photos#primary_photo'
       resources :dishes, only: [:index, :create]
