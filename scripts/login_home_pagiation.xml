@@ -28,11 +28,11 @@
     </arrivalphase>
   </load>
   <sessions>
-    <session name="signup_test" probability="100" type="ts_http">
-      <!-- User Signup -->
+    <session name="login_browse_restaurants" probability="100" type="ts_http">
+      <!-- User Login -->
       <request subst="true">
         <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
-        <http url="/api/signup" method="POST" contents_from_file="./signup_unique.json">
+        <http url="/api/login" method="POST" contents_from_file="./login_unique.json">
           <http_header name="Content-Type" value="application/json" />
         </http>
       </request>
@@ -49,7 +49,6 @@
       <for var="restaurant_id" from="1" to="15" incr="1">
         <request>
           <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
       </for>

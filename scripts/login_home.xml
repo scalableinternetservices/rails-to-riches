@@ -25,14 +25,7 @@
   </load>
 
   <sessions>
-    <session name="signup_login" probability="100" type="ts_http">
-      
-      <request subst="true">
-        <http url="/api/signup" method="POST" contents_from_file="./signup_unique.json">
-          <http_header name="Content-Type" value="application/json" />
-        </http>
-      </request>
-      <thinktime value="1" />
+    <session name="login_home" probability="100" type="ts_http">
 
       <request subst="true">
         <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
@@ -42,12 +35,21 @@
       </request>
       <thinktime value="1" />
 
+      <!-- Access Dashboard -->
       <request>
         <http url="/api/restaurants" method="GET">
           <http_header name="Authorization" value="Bearer %%_jwt%%" />
         </http>
       </request>
       <thinktime value="1" />
+
+      <for var="restaurant_id" from="1" to="15" incr="1">
+        <request>
+          <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+      </for>
 
     </session>
   </sessions>

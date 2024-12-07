@@ -32,14 +32,21 @@
   </load>
   <sessions>
     <session name="browse_restaurants" probability="100" type="ts_http">
-      <!-- User Login -->
-      <request subst="true">
-        <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
-        <http url="/api/login" method="POST" contents_from_file="./login.json">
-          <http_header name="Content-Type" value="application/json" />
+
+      <!-- Access Dashboard -->
+      <request>
+        <http url="/api/restaurants" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
         </http>
       </request>
       <thinktime value="1" />
+
+      <for var="restaurant_id" from="1" to="15" incr="1">
+        <request>
+          <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
+          </http>
+        </request>
+      </for>
 
       <!-- Loop over known restaurant IDs -->
       <for var="restaurant_id" from="1" to="15" incr="1">
@@ -47,7 +54,6 @@
         <!-- View Specific Restaurant Details -->
         <request subst="true">
           <http url="/api/restaurants/%%_restaurant_id%%" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
         <thinktime value="1" />
@@ -55,14 +61,12 @@
         <!-- View Dishes for the Restaurant -->
         <request subst="true">
           <http url="/api/restaurants/%%_restaurant_id%%/dishes" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
 
         <!-- View Reviews for the Restaurant -->
         <request subst="true">
           <http url="/api/restaurants/%%_restaurant_id%%/reviews" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
 
@@ -70,7 +74,6 @@
         <for var="review_id" from="1" to="3" incr="1">
           <request subst="true">
             <http url="/api/restaurants/%%_restaurant_id%%/reviews/%%_review_id%%/comments" method="GET">
-              <http_header name="Authorization" value="Bearer %%_jwt%%" />
             </http>
           </request>
         </for>
@@ -79,7 +82,6 @@
         <!-- View Photos for the Restaurant -->
         <request>
           <http url="/api/restaurants/%%_restaurant_id%%/photos" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
         <thinktime value="1" />

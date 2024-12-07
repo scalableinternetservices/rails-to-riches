@@ -43,6 +43,14 @@
       </request>
       <thinktime value="1" />
 
+      <for var="restaurant_id" from="1" to="15" incr="1">
+        <request>
+          <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+      </for>
+
       <!-- Create a New Restaurant -->
       <request subst="true">
         <dyn_variable name="id" re='\"id\":([0-9]+)' />

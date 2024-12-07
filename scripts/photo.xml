@@ -35,40 +35,61 @@
       </request>
       <thinktime value="1" />
 
-      <!-- Navigate to a Specific Restaurant's Detail Page -->
-      <for var="restaurant_id" from="1" to="3" incr="1">
-        <request subst="true">
-          <http url="/api/restaurants/%%_restaurant_id%%" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
-          </http>
-        </request>
-        <thinktime value="1" />
+      <request subst="true">
+        <http url="/api/restaurants/1" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
 
-        <!-- Access the Photo Gallery Section -->
-        <request subst="true">
-          <http url="/api/restaurants/%%_restaurant_id%%/photos" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
-          </http>
-        </request>
-        <thinktime value="1" />
+      <!-- View Dishes for the Restaurant -->
+      <request subst="true">
+        <http url="/api/restaurants/1/dishes" method="GET">
+        <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
 
-        <!-- Upload a New Photo -->
-        <request subst="all_except_body">
-          <http url="/api/restaurants/%%_restaurant_id%%/photos" method="POST" contents_from_file="./photo_form.bin">
-            <http_header name="Content-Type" value="multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" />
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
-          </http>
-        </request>
-        <thinktime value="1" />
+      <!-- View Photos for the Restaurant -->
+      <request>
+        <http url="/api/restaurants/1/photos" method="GET">
+        <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
 
-        <!-- View Updated Photo Gallery -->
+      <!-- View Reviews for the Restaurant -->
+      <request subst="true">
+        <http url="/api/restaurants/1/reviews" method="GET">
+        <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+
+      <!-- View Comments for a Specific Review -->
+      <for var="review_id" from="1" to="3" incr="1">
         <request subst="true">
-          <http url="/api/restaurants/%%_restaurant_id%%/photos" method="GET">
-            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          <http url="/api/restaurants/1/reviews/%%_review_id%%/comments" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
-        <thinktime value="1" />
       </for>
+      <thinktime value="1" />
+
+      <!-- Upload a New Photo -->
+      <request subst="all_except_body">
+        <http url="/api/restaurants/1/photos" method="POST" contents_from_file="./photo_form.bin">
+          <http_header name="Content-Type" value="multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" />
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
+
+      <!-- View Updated Photo Gallery -->
+      <request subst="true">
+        <http url="/api/restaurants/1/photos" method="GET">
+          <http_header name="Authorization" value="Bearer %%_jwt%%" />
+        </http>
+      </request>
+      <thinktime value="1" />
     </session>
   </sessions>
 </tsung>
