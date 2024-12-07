@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post '/login', to: 'authentication#login'
     post '/signup', to: 'authentication#signup'
     get '/me', to: 'authentication#me'
+    get '/restaurants_paged', to: 'restaurants#paged_index'
     
     resources :users, only: [:index, :show, :update, :destroy]
     resources :restaurants do

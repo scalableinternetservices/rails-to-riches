@@ -9,6 +9,18 @@ module Api
       render json: @restaurants
     end
 
+    # GET /restaurants_paged
+    # GET /restaurants_paged?page=2&per_page=5
+    def paged_index
+      @restaurants = Restaurant.page(params[:page]).per(params[:per_page] || 10)
+      render json: {
+        restaurants: @restaurants,
+        current_page: @restaurants.current_page,
+        total_pages: @restaurants.total_pages,
+        total_count: @restaurants.total_count
+      }
+    end
+
     # GET /restaurants/:id
     def show
       @restaurant = Restaurant.find(params[:id])

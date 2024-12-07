@@ -10,6 +10,8 @@ gem "bcrypt", "~> 3.1.7"
 
 gem "jwt"
 
+gem 'kaminari'
+
 gem "rails", "~> 7.1.2"
 
 gem "sprockets-rails"
