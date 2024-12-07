@@ -12,7 +12,7 @@ module Api
       if primary_photo
         render json: {
           id: primary_photo.id,
-          image_url: primary_photo.image.attached? ? url_for(primary_photo.image) : nil,
+          image_url: primary_photo.image.present? ? base64_image_data(primary_photo) : nil,
           primary: primary_photo.primary
         }
       else
@@ -25,7 +25,7 @@ module Api
       @photos = @restaurant.photos.map do |photo|
         {
           id: photo.id,
-          image_url: photo.image.attached? ? url_for(photo.image) : nil,
+          image_url: photo.image.present? ? base64_image_data(photo) : nil,
           primary: photo.primary
         }
       end
@@ -36,7 +36,7 @@ module Api
     def show
       render json: {
         id: @photo.id,
-        image_url: @photo.image.attached? ? url_for(@photo.image) : nil,
+        image_url: @photo.image.present? ? base64_image_data(@photo) : nil,
         primary: @photo.primary
       }
     end
@@ -52,7 +52,7 @@ module Api
       if @photo.save
         render json: {
           id: @photo.id,
-          image_url: @photo.image.attached? ? url_for(@photo.image) : nil,
+          image_url: @photo.image.present? ? base64_image_data(@photo) : nil,
           primary: @photo.primary
         }, status: :created
       else
@@ -69,7 +69,7 @@ module Api
       if @photo.update(photo_params)
         render json: {
           id: @photo.id,
-          image_url: @photo.image.attached? ? url_for(@photo.image) : nil,
+          image_url: @photo.image.present? ? base64_image_data(@photo) : nil,
           primary: @photo.primary
         }
       else
@@ -103,6 +103,10 @@ module Api
       unless @user.role == 'business_owner'
         render json: { error: 'You are not authorized to perform this action' }, status: :forbidden
       end
+    end
+
+    def base64_image_data(photo)
+      "data:image/jpeg;base64,#{Base64.strict_encode64(photo.image_data)}"
     end
   end
 end
