@@ -1,49 +1,62 @@
 import React, { useState } from "react";
 import { Grid, TextField, Button } from "@mui/material";
-import { createDish } from "../services/api";
+import { createDish, updateDish } from "../services/api";
 import { useParams } from "react-router-dom";
 
-const AddDishes = () => {
+const AddDishes = ({ initialDish, isEditing, onCancel, onSuccess }) => {
   const { id } = useParams();
-  const [showDishForm, setShowDishForm] = useState(false);
-  const [dish, setDish] = useState({ name: "", description: "", price: "" });
+  const [showDishForm, setShowDishForm] = useState(isEditing || false);
+  const [dish, setDish] = useState({
+    name: initialDish?.name || "",
+    description: initialDish?.description || "",
+    price: initialDish?.price || "",
+    id: initialDish?.id || null 
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDish({ ...dish, [name]: value });
+    setDish(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleAddDish = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (dish.name && dish.description && dish.price) {
-      setDish({
-        name: dish.name,
-        description: dish.description,
-        price: dish.price,
-      });
       try {
-        const response = await createDish(id, dish);
-        if (response.status === 201) {
-          // Dish added successfully
+        if (isEditing) {
+          const response = await updateDish(dish.id, dish);
+          if (response.status === 200) {
+            onSuccess?.();
+          }
         } else {
-          // Handle other statuses
+          const response = await createDish(id, dish);
+          if (response.status === 201) {
+            onSuccess?.();
+          }
         }
+        handleCancel(); // Clear form after successful submission
       } catch (error) {
-        // Handle error
+        console.error('Error saving dish:', error);
       }
     } else {
       alert("Please fill in all fields!");
     }
   };
 
+  const handleCancel = () => {
+    setShowDishForm(false);
+    setDish({ name: "", description: "", price: "", id: null });
+    onCancel?.();
+  };
+
   return (
     <>
-      {!showDishForm && (
+      {!showDishForm && !isEditing && (
         <Button
           color="secondary"
-          onClick={() => {
-            setShowDishForm(!showDishForm);
-          }}
+          onClick={() => setShowDishForm(true)}
           sx={{
             marginTop: 2,
             bgcolor: "primary.main",
@@ -57,8 +70,8 @@ const AddDishes = () => {
           Add Dish
         </Button>
       )}
-      {showDishForm && (
-        <form onSubmit={handleAddDish}>
+      {(showDishForm || isEditing) && (
+        <form onSubmit={handleSubmit}>
           <Grid container spacing={2} mt={2}>
             <Grid item xs={12} sm={4}>
               <TextField
@@ -98,13 +111,11 @@ const AddDishes = () => {
             color="primary"
             sx={{ mt: 2 }}
           >
-            Add Dish
+            {isEditing ? "Update Dish" : "Add Dish"}
           </Button>
           <Button
             color="secondary"
-            onClick={() => {
-              setShowDishForm(!showDishForm);
-            }}
+            onClick={handleCancel}
             sx={{
               marginTop: 2,
               marginLeft: 2,

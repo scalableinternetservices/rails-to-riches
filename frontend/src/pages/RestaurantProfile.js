@@ -131,7 +131,7 @@ function RestaurantProfile() {
           <Typography variant="h3" component="h1" gutterBottom>
             {restaurant.name}
           </Typography>
-          
+
           <Box
             sx={{
               display: "flex",
@@ -199,8 +199,14 @@ function RestaurantProfile() {
         <Typography variant="h4" gutterBottom>
           Our Dishes
         </Typography>
-        <DishesList dishes={dishes} />
-        {restaurant?.user_id === user?.id && <AddDishes />}
+        <DishesList
+          dishes={dishes}
+          isOwner={restaurant?.user_id === user?.id}
+          onDishesUpdate={fetchData}
+        />
+        {restaurant?.user_id === user?.id && (
+          <AddDishes onSuccess={fetchData} />
+        )}
       </Box>
 
       {/* Reviews List */}
