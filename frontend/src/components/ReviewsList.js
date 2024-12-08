@@ -10,6 +10,7 @@ import {
   Grid,
   Divider,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import Comment from "../components/Comment";
@@ -55,6 +56,11 @@ function ReviewsList({ reviews, fetchReviews }) {
 
   return (
     <Box>
+      {reviews?.length === 0 && (
+        <Typography variant="h6">
+          No reviews available for this restaurant yet.
+        </Typography>
+      )}
       {reviews.map((review) => (
         <Card key={review.id} sx={{ mb: 2 }}>
           <CardContent>
@@ -74,18 +80,22 @@ function ReviewsList({ reviews, fetchReviews }) {
                   </Box>
                   {user?.id === review.user_id && (
                     <Box>
-                      <IconButton
-                        size="small"
-                        onClick={() => setEditingReview(review)}
-                      >
-                        <Edit fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => handleDeleteClick(review, "review")}
-                      >
-                        <Delete fontSize="small" />
-                      </IconButton>
+                      <Tooltip title="Edit Review">
+                        <IconButton
+                          size="small"
+                          onClick={() => setEditingReview(review)}
+                        >
+                          <Edit fontSize="small" color="primary" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete Review">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDeleteClick(review, "review")}
+                        >
+                          <Delete fontSize="small" color="error" />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   )}
                 </Box>
@@ -132,23 +142,27 @@ function ReviewsList({ reviews, fetchReviews }) {
                         </Typography>
                         {user?.id === comment.user_id && (
                           <Box>
-                            <IconButton
-                              size="small"
-                              onClick={() => setEditingComment(comment)}
-                            >
-                              <Edit fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() =>
-                                handleDeleteClick(
-                                  { ...comment, review_id: review.id },
-                                  "comment"
-                                )
-                              }
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
+                            <Tooltip title="Edit Comment">
+                              <IconButton
+                                size="small"
+                                onClick={() => setEditingComment(comment)}
+                              >
+                                <Edit fontSize="small" color="primary" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete Comment">
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleDeleteClick(
+                                    { ...comment, review_id: review.id },
+                                    "comment"
+                                  )
+                                }
+                              >
+                                <Delete fontSize="small" color="error" />
+                              </IconButton>
+                            </Tooltip>
                           </Box>
                         )}
                       </Box>

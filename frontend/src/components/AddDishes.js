@@ -10,14 +10,14 @@ const AddDishes = ({ initialDish, isEditing, onCancel, onSuccess }) => {
     name: initialDish?.name || "",
     description: initialDish?.description || "",
     price: initialDish?.price || "",
-    id: initialDish?.id || null 
+    id: initialDish?.id || null,
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDish(prev => ({
+    setDish((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -36,9 +36,9 @@ const AddDishes = ({ initialDish, isEditing, onCancel, onSuccess }) => {
             onSuccess?.();
           }
         }
-        handleCancel(); // Clear form after successful submission
+        handleCancel();
       } catch (error) {
-        console.error('Error saving dish:', error);
+        console.error("Error saving dish:", error);
       }
     } else {
       alert("Please fill in all fields!");
@@ -58,7 +58,7 @@ const AddDishes = ({ initialDish, isEditing, onCancel, onSuccess }) => {
           color="secondary"
           onClick={() => setShowDishForm(true)}
           sx={{
-            marginTop: 2,
+            marginTop: 4,
             bgcolor: "primary.main",
             color: "error.contrastText",
             padding: 1,

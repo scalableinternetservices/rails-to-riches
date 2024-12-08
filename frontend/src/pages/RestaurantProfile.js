@@ -7,9 +7,11 @@ import {
   Box,
   Chip,
   Link,
-  Button,
   CircularProgress,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 import Rating from "@mui/material/Rating";
 import { useNavigate, useParams } from "react-router-dom";
 import PhotoGallery from "../components/PhotoGallery";
@@ -21,9 +23,11 @@ import {
   listComments,
   listDishes,
   listPhotos,
-} from "../services/api"; // Import API functions
+  deleteRestaurant,
+} from "../services/api";
 import Review from "./Review";
 import AddDishes from "../components/AddDishes";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function RestaurantProfile() {
   const { id } = useParams();
@@ -101,20 +105,62 @@ function RestaurantProfile() {
   const averageRating = calculateAverageRating(reviews);
   const roundedAverageRating = Math.round(averageRating * 10) / 10;
 
-  const EditButton = ({ restaurantId, userId, currentUserId }) => {
+  const RestaurantActions = ({ restaurantId, userId, currentUserId }) => {
     const navigate = useNavigate();
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     if (userId !== currentUserId) return null;
 
+    const handleDeleteConfirm = async () => {
+      try {
+        await deleteRestaurant(restaurantId);
+        navigate("/"); // Or wherever you want to redirect after deletion
+      } catch (error) {
+        console.error("Error deleting restaurant:", error);
+      }
+      setDeleteDialogOpen(false);
+    };
+
     return (
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigate(`/restaurants/${restaurantId}/edit`)}
-        sx={{ ml: 2 }}
-      >
-        Edit Restaurant
-      </Button>
+      <>
+        <Box sx={{ display: "flex", gap: 1, ml: 2 }}>
+          <Tooltip title="Edit Restaurant Details">
+            <IconButton
+              size="small"
+              onClick={() => navigate(`/restaurants/${restaurantId}/edit`)}
+            >
+              <Edit fontSize="small" color="primary" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete Restaurant">
+            <IconButton size="small" onClick={() => setDeleteDialogOpen(true)}>
+              <Delete fontSize="small" color="error" />
+            </IconButton>
+          </Tooltip>
+          {/* <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate(`/restaurants/${restaurantId}/edit`)}
+          >
+            Edit Restaurant
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setDeleteDialogOpen(true)}
+          >
+            Delete Restaurant
+          </Button> */}
+        </Box>
+
+        <ConfirmDialog
+          open={deleteDialogOpen}
+          title="Delete Restaurant"
+          content="Are you sure you want to delete this restaurant? This action cannot be undone."
+          handleClose={() => setDeleteDialogOpen(false)}
+          handleConfirm={handleDeleteConfirm}
+        />
+      </>
     );
   };
 
@@ -150,7 +196,7 @@ function RestaurantProfile() {
               {reviews.length !== 1 ? "s" : ""})
             </Typography>
           </Box>
-          <EditButton
+          <RestaurantActions
             restaurantId={restaurant.id}
             userId={restaurant.user_id}
             currentUserId={user?.id}
@@ -214,10 +260,11 @@ function RestaurantProfile() {
         </Typography>
         <ReviewsList reviews={reviews} fetchReviews={fetchData} />
       </Box>
-
-      <Box sx={{ mb: 4 }}>
-        <Review handleFetchReviews={fetchData} />
-      </Box>
+      {user?.id !== restaurant?.user_id && (
+        <Box sx={{ mb: 4 }}>
+          <Review handleFetchReviews={fetchData} />
+        </Box>
+      )}
     </Container>
   );
 }

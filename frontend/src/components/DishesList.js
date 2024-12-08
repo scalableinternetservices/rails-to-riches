@@ -7,6 +7,7 @@ import {
   Chip,
   Box,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { deleteDish } from "../services/api";
@@ -56,29 +57,30 @@ function DishesList({ dishes, isOwner, onDishesUpdate }) {
                     gap: 1,
                   }}
                 >
-                  <IconButton
-                    size="small"
-                    onClick={() => handleEditClick(dish)}
-                    sx={{
-                      bgcolor: "background.paper",
-                      "&:hover": { bgcolor: "action.hover" },
-                    }}
-                  >
-                    <Edit fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteClick(dish)}
-                    sx={{
-                      bgcolor: "background.paper",
-                      "&:hover": {
-                        bgcolor: "error.light",
-                        color: "error.contrastText",
-                      },
-                    }}
-                  >
-                    <Delete fontSize="small" />
-                  </IconButton>
+                  <Tooltip title="Edit Dish">
+                    <IconButton
+                      size="small"
+                      onClick={() => handleEditClick(dish)}
+                      sx={{
+                        bgcolor: "background.paper",
+                        "&:hover": { bgcolor: "action.hover" },
+                      }}
+                    >
+                      <Edit fontSize="small" color="primary" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete Dish">
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteClick(dish)}
+                      sx={{
+                        bgcolor: "background.paper",
+                        "&:hover": { bgcolor: "action.hover" },
+                      }}
+                    >
+                      <Delete fontSize="small" color="error" />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               )}
               <CardContent>
