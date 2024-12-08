@@ -113,11 +113,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_07_205343) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "comments", "reviews"
+  add_foreign_key "comments", "reviews", on_delete: :cascade
   add_foreign_key "comments", "users"
-  add_foreign_key "dishes", "restaurants"
-  add_foreign_key "photos", "restaurants"
+  add_foreign_key "dishes", "restaurants", on_delete: :cascade
+  add_foreign_key "photos", "restaurants", on_delete: :cascade
   add_foreign_key "restaurants", "users"
-  add_foreign_key "reviews", "restaurants"
+  add_foreign_key "reviews", "restaurants", on_delete: :cascade
   add_foreign_key "reviews", "users"
 end
