@@ -12,7 +12,7 @@ gem "jwt"
 
 gem 'kaminari'
 
-gem "rails", "~> 7.1.2"
+gem "rails", "~> 8.0.0"
 
 gem "sprockets-rails"
 
