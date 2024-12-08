@@ -1,16 +1,17 @@
 // src/pages/RestaurantProfile.js
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { AuthContext } from "../AuthContext";
-import { useParams } from "react-router-dom";
 import {
   Container,
   Typography,
   Box,
   Chip,
   Link,
+  Button,
   CircularProgress,
 } from "@mui/material";
 import Rating from "@mui/material/Rating";
+import { useNavigate, useParams } from "react-router-dom";
 
 import PhotoGallery from "../components/PhotoGallery";
 import DishesList from "../components/DishesList";
@@ -101,8 +102,24 @@ function RestaurantProfile() {
 
   const averageRating = calculateAverageRating(reviews);
   const roundedAverageRating = Math.round(averageRating * 10) / 10;
-  console.log(restaurant);
-  console.log(user);
+
+  const EditButton = ({ restaurantId, userId, currentUserId }) => {
+    const navigate = useNavigate();
+
+    if (userId !== currentUserId) return null;
+
+    return (
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate(`/restaurants/${restaurantId}/edit`)}
+        sx={{ ml: 2 }}
+      >
+        Edit Restaurant
+      </Button>
+    );
+  };
+
   return (
     <Container
       maxWidth="lg"
@@ -114,6 +131,11 @@ function RestaurantProfile() {
           <Typography variant="h3" component="h1" gutterBottom>
             {restaurant.name}
           </Typography>
+          <EditButton
+            restaurantId={restaurant.id}
+            userId={restaurant.user_id}
+            currentUserId={user?.id}
+          />
           <Box
             sx={{
               display: "flex",

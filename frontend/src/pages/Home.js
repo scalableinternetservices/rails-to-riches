@@ -24,7 +24,7 @@ function Home() {
             <Button
               color="secondary"
               component={Link}
-              to="/createRestaurant"
+              to="/restaurants/new"
               sx={{
                 bgcolor: "primary.main",
                 color: "error.contrastText",

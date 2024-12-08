@@ -1,9 +1,13 @@
-// src/pages/CreateRestaurant.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Grid, Box, Typography, Container } from "@mui/material";
-import { createRestaurant, createPhoto } from "../services/api"; // Import API functions
+import { useNavigate, useParams } from "react-router-dom";
+import { createRestaurant, updateRestaurant, createPhoto, getRestaurant } from "../services/api";
 
-export default function CreateRestaurant() {
+export default function RestaurantForm() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEditMode = Boolean(id);
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -18,6 +22,33 @@ export default function CreateRestaurant() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (isEditMode) {
+      // Fetch restaurant data if in edit mode
+      const fetchRestaurantData = async () => {
+        try {
+          const response = await getRestaurant(id);
+          const restaurant = response.data;
+          setFormData({
+            name: restaurant.name,
+            description: restaurant.description,
+            phone: restaurant.phone_number,
+            address: restaurant.address,
+            city: restaurant.city,
+            state: restaurant.state,
+            zip: restaurant.zip,
+            website: restaurant.website || "",
+            photo: null,
+          });
+        } catch (err) {
+          setError("Failed to fetch restaurant data");
+          console.error(err);
+        }
+      };
+      fetchRestaurantData();
+    }
+  }, [id, isEditMode]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,8 +75,7 @@ export default function CreateRestaurant() {
     setSuccessMessage("");
 
     try {
-      // Create the restaurant
-      const restaurantResponse = await createRestaurant({
+      const restaurantData = {
         name: formData.name,
         description: formData.description,
         phone_number: formData.phone,
@@ -54,22 +84,33 @@ export default function CreateRestaurant() {
         state: formData.state,
         zip: formData.zip,
         website: formData.website,
-      });
+      };
 
-      const restaurantId = restaurantResponse.data.id;
+      let restaurantId;
+      if (isEditMode) {
+        const response = await updateRestaurant(id, restaurantData);
+        restaurantId = id;
+        setSuccessMessage("Restaurant updated successfully!");
+      } else {
+        const response = await createRestaurant(restaurantData);
+        restaurantId = response.data.id;
+        setSuccessMessage("Restaurant created successfully!");
+      }
 
-      // Upload the primary photo
+      // Upload the primary photo if selected
       if (formData.photo) {
         const formDataPhoto = new FormData();
         formDataPhoto.append("photo[image]", formData.photo);
         formDataPhoto.append("photo[primary]", true);
-
         await createPhoto(restaurantId, formDataPhoto);
       }
 
-      setSuccessMessage("Restaurant created successfully!");
+      // Navigate back to restaurant profile after short delay
+      setTimeout(() => {
+        navigate(`/restaurants/${restaurantId}`);
+      }, 1500);
     } catch (err) {
-      setError("Failed to create restaurant. Please try again.");
+      setError(`Failed to ${isEditMode ? 'update' : 'create'} restaurant. Please try again.`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -88,7 +129,7 @@ export default function CreateRestaurant() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Create Restaurant
+          {isEditMode ? "Edit Restaurant" : "Create Restaurant"}
         </Typography>
         {error && (
           <Typography color="error" variant="body2" gutterBottom>
@@ -96,7 +137,7 @@ export default function CreateRestaurant() {
           </Typography>
         )}
         {successMessage && (
-          <Typography color="success" variant="body2" gutterBottom>
+          <Typography color="success.main" variant="body2" gutterBottom>
             {successMessage}
           </Typography>
         )}
@@ -210,7 +251,7 @@ export default function CreateRestaurant() {
                 fullWidth
                 disabled={loading}
               >
-                {loading ? "Submitting..." : "Submit"}
+                {loading ? "Submitting..." : (isEditMode ? "Update" : "Submit")}
               </Button>
             </Grid>
           </Grid>
