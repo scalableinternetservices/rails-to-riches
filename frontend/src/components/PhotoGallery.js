@@ -1,8 +1,14 @@
 // src/components/PhotoGallery.js
-import React, { useState } from 'react';
-import { ImageList, ImageListItem, Box, Button, IconButton } from '@mui/material';
-import { Delete } from '@mui/icons-material';
-import { createPhoto, deletePhoto } from '../services/api';
+import React, { useState } from "react";
+import {
+  ImageList,
+  ImageListItem,
+  Box,
+  Button,
+  IconButton,
+} from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { createPhoto, deletePhoto } from "../services/api";
 
 function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
   const [isManaging, setIsManaging] = useState(false);
@@ -21,27 +27,29 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
       await createPhoto(restaurantId, formData);
       onPhotosUpdate();
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      console.error("Error uploading photo:", error);
     }
   };
 
   const handleDeleteClick = (photoId) => {
     if (photosToDelete.includes(photoId)) {
-      setPhotosToDelete(prev => prev.filter(id => id !== photoId));
+      setPhotosToDelete((prev) => prev.filter((id) => id !== photoId));
     } else {
-      setPhotosToDelete(prev => [...prev, photoId]);
+      setPhotosToDelete((prev) => [...prev, photoId]);
     }
   };
 
   const handleSubmitDeletes = async () => {
     setIsSubmitting(true);
     try {
-      await Promise.all(photosToDelete.map(photoId => deletePhoto(restaurantId, photoId)));
+      await Promise.all(
+        photosToDelete.map((photoId) => deletePhoto(restaurantId, photoId))
+      );
       onPhotosUpdate();
       setPhotosToDelete([]);
       setIsManaging(false);
     } catch (error) {
-      console.error('Error deleting photos:', error);
+      console.error("Error deleting photos:", error);
     }
     setIsSubmitting(false);
   };
@@ -50,12 +58,8 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
     <Box>
       {/* Control Buttons */}
       {isOwner && (
-        <Box sx={{ mb: 2, display: 'flex', gap: 2 }}>
-          
-          <Button
-            variant="contained"
-            component="label"
-          >
+        <Box sx={{ mb: 2, display: "flex", gap: 2 }}>
+          <Button variant="contained" component="label">
             Upload Photo
             <input
               type="file"
@@ -64,7 +68,7 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
               onChange={handlePhotoUpload}
             />
           </Button>
-          
+
           <Button
             variant="contained"
             onClick={() => {
@@ -72,11 +76,9 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
               setPhotosToDelete([]); // Clear selection when toggling manage mode
             }}
           >
-            {isManaging ? 'Cancel Managing' : 'Manage Photos'}
+            {isManaging ? "Cancel Managing" : "Manage Photos"}
           </Button>
-          
-          
-          
+
           {isManaging && photosToDelete.length > 0 && (
             <Button
               variant="contained"
@@ -84,7 +86,9 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
               onClick={handleSubmitDeletes}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Deleting...' : `Delete Selected (${photosToDelete.length})`}
+              {isSubmitting
+                ? "Deleting..."
+                : `Delete Selected (${photosToDelete.length})`}
             </Button>
           )}
         </Box>
@@ -101,10 +105,10 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
         }}
       >
         {photos.map((photo, index) => (
-          <ImageListItem 
+          <ImageListItem
             key={index}
             sx={{
-              position: 'relative',
+              position: "relative",
             }}
           >
             <img
@@ -113,38 +117,42 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
               alt={`Img ${index + 1}`}
               loading="lazy"
               style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                borderRadius: '8px',
-                filter: photosToDelete.includes(photo.id) ? 'blur(2px)' : 'none',
-                transition: 'filter 0.3s ease'
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                borderRadius: "8px",
+                filter: photosToDelete.includes(photo.id)
+                  ? "blur(2px)"
+                  : "none",
+                transition: "filter 0.3s ease",
               }}
             />
-            
+
             {isManaging && (
               <IconButton
                 onClick={() => handleDeleteClick(photo.id)}
                 sx={{
-                  position: 'absolute',
+                  position: "absolute",
                   top: 8,
                   right: 8,
-                  backgroundColor: photosToDelete.includes(photo.id) 
-                    ? 'error.main' 
-                    : 'rgba(255, 255, 255, 0.9)',
-                  '&:hover': {
+                  backgroundColor: photosToDelete.includes(photo.id)
+                    ? "error.main"
+                    : "rgba(255, 255, 255, 0.9)",
+                  "&:hover": {
                     backgroundColor: photosToDelete.includes(photo.id)
-                      ? 'error.dark'
-                      : 'rgba(255, 255, 255, 1)'
+                      ? "error.dark"
+                      : "rgba(255, 255, 255, 1)",
                   },
                   // Remove opacity transitions and always show the button
-                  boxShadow: 1
+                  boxShadow: 1,
                 }}
               >
-                <Delete 
-                  sx={{ 
-                    color: photosToDelete.includes(photo.id) ? 'white' : 'action.active'
-                  }} 
+                <Delete
+                  sx={{
+                    color: photosToDelete.includes(photo.id)
+                      ? "white"
+                      : "action.active",
+                  }}
                 />
               </IconButton>
             )}

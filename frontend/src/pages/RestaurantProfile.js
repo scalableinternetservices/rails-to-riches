@@ -12,11 +12,9 @@ import {
 } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import { useNavigate, useParams } from "react-router-dom";
-
 import PhotoGallery from "../components/PhotoGallery";
 import DishesList from "../components/DishesList";
 import ReviewsList from "../components/ReviewsList";
-
 import {
   getRestaurant,
   listReviews,

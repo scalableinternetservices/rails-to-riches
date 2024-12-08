@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
-import { Grid, Card, CardContent, Typography, Chip, Box, IconButton } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
-import { deleteDish } from '../services/api';
-import AddDishes from './AddDishes';
-import ConfirmDialog from './ConfirmDialog';
+import React, { useState } from "react";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Box,
+  IconButton,
+} from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
+import { deleteDish } from "../services/api";
+import AddDishes from "./AddDishes";
+import ConfirmDialog from "./ConfirmDialog";
 
 function DishesList({ dishes, isOwner, onDishesUpdate }) {
   const [selectedDish, setSelectedDish] = useState(null);
@@ -26,7 +34,7 @@ function DishesList({ dishes, isOwner, onDishesUpdate }) {
       await deleteDish(dishToDelete.id);
       onDishesUpdate();
     } catch (error) {
-      console.error('Error deleting dish:', error);
+      console.error("Error deleting dish:", error);
     }
     setDeleteDialogOpen(false);
     setDishToDelete(null);
@@ -37,25 +45,36 @@ function DishesList({ dishes, isOwner, onDishesUpdate }) {
       <Grid container spacing={4}>
         {dishes.map((dish) => (
           <Grid item xs={12} sm={6} md={4} key={dish.id}>
-            <Card sx={{ height: '100%', position: 'relative' }}>
+            <Card sx={{ height: "100%", position: "relative" }}>
               {isOwner && (
-                <Box sx={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: 1 }}>
-                  <IconButton 
-                    size="small" 
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    display: "flex",
+                    gap: 1,
+                  }}
+                >
+                  <IconButton
+                    size="small"
                     onClick={() => handleEditClick(dish)}
-                    sx={{ 
-                      bgcolor: 'background.paper',
-                      '&:hover': { bgcolor: 'action.hover' }
+                    sx={{
+                      bgcolor: "background.paper",
+                      "&:hover": { bgcolor: "action.hover" },
                     }}
                   >
                     <Edit fontSize="small" />
                   </IconButton>
-                  <IconButton 
-                    size="small" 
+                  <IconButton
+                    size="small"
                     onClick={() => handleDeleteClick(dish)}
-                    sx={{ 
-                      bgcolor: 'background.paper',
-                      '&:hover': { bgcolor: 'error.light', color: 'error.contrastText' }
+                    sx={{
+                      bgcolor: "background.paper",
+                      "&:hover": {
+                        bgcolor: "error.light",
+                        color: "error.contrastText",
+                      },
                     }}
                   >
                     <Delete fontSize="small" />

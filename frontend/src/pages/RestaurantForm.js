@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, Grid, Box, Typography, Container } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { createRestaurant, updateRestaurant, createPhoto, getRestaurant } from "../services/api";
+import {
+  createRestaurant,
+  updateRestaurant,
+  createPhoto,
+  getRestaurant,
+} from "../services/api";
 
 export default function RestaurantForm() {
   const { id } = useParams();
@@ -88,7 +100,7 @@ export default function RestaurantForm() {
 
       let restaurantId;
       if (isEditMode) {
-        const response = await updateRestaurant(id, restaurantData);
+        await updateRestaurant(id, restaurantData);
         restaurantId = id;
         setSuccessMessage("Restaurant updated successfully!");
       } else {
@@ -110,7 +122,11 @@ export default function RestaurantForm() {
         navigate(`/restaurants/${restaurantId}`);
       }, 1500);
     } catch (err) {
-      setError(`Failed to ${isEditMode ? 'update' : 'create'} restaurant. Please try again.`);
+      setError(
+        `Failed to ${
+          isEditMode ? "update" : "create"
+        } restaurant. Please try again.`
+      );
       console.error(err);
     } finally {
       setLoading(false);
@@ -251,7 +267,7 @@ export default function RestaurantForm() {
                 fullWidth
                 disabled={loading}
               >
-                {loading ? "Submitting..." : (isEditMode ? "Update" : "Submit")}
+                {loading ? "Submitting..." : isEditMode ? "Update" : "Submit"}
               </Button>
             </Grid>
           </Grid>
