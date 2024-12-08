@@ -18,6 +18,8 @@ gem "sprockets-rails"
 
 gem "pg", "~> 1.3.0"
 
+gem "faker", "~> 3.5.1"
+
 # Check the latest supported [https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.ruby]
 gem "puma", ">= 5.0"
 

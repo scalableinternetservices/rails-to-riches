@@ -1,80 +1,144 @@
 # db/seeds.rb
+require 'faker'
 
 # Clear existing data
-User.destroy_all
+puts "Clearing existing data..."
 Restaurant.destroy_all
 Dish.destroy_all
 Review.destroy_all
 Comment.destroy_all
 Photo.destroy_all
+User.destroy_all
 
-# Create Users
-users = 5.times.map do |i|
-  User.create!(
-    name: "User #{i + 1}",
-    email: "user#{i + 1}@example.com",
-    password: "password",
-    password_confirmation: "password",
-    role: "business_owner"
+# Constants
+USER_COUNT = 5
+RESTAURANTS_PER_USER = 5
+DISHES_PER_RESTAURANT = 10
+REVIEWS_PER_RESTAURANT = 15
+COMMENTS_PER_REVIEW = 5
+PHOTOS_PER_RESTAURANT = 3
+
+# Helper method to get current timestamp
+current_time = Time.now
+
+# Insert Users
+puts "Inserting users..."
+users = USER_COUNT.times.map do
+  {
+    name: Faker::Name.name,
+    email: Faker::Internet.unique.email,
+    password_digest: BCrypt::Password.create('password'), # Ensure passwords are hashed
+    role: "business_owner",
+    created_at: current_time,
+    updated_at: current_time
+  }
+end
+User.insert_all(users)
+user_ids = User.pluck(:id)
+
+# Insert Restaurants
+puts "Inserting restaurants..."
+restaurants = []
+user_ids.each do |user_id|
+  RESTAURANTS_PER_USER.times do
+    restaurants << {
+      name: Faker::Restaurant.name,
+      address: Faker::Address.street_address,
+      city: Faker::Address.city,
+      state: Faker::Address.state_abbr,
+      zip: Faker::Address.zip_code,
+      description: Faker::Restaurant.description,
+      phone_number: Faker::PhoneNumber.phone_number,
+      website: Faker::Internet.url,
+      user_id: user_id,
+      created_at: current_time,
+      updated_at: current_time
+    }
+  end
+end
+
+puts "Now inserting..."
+Restaurant.insert_all(restaurants)
+restaurant_ids = Restaurant.pluck(:id)
+
+# Insert Dishes
+puts "Inserting dishes..."
+dishes = []
+restaurant_ids.each do |restaurant_id|
+  DISHES_PER_RESTAURANT.times do
+    dishes << {
+      name: Faker::Food.dish,
+      description: Faker::Food.description,
+      price: Faker::Commerce.price(range: 5..50),
+      restaurant_id: restaurant_id,
+      created_at: current_time,
+      updated_at: current_time
+    }
+  end
+end
+Dish.insert_all(dishes)
+
+# Insert Reviews
+puts "Inserting reviews..."
+reviews = []
+restaurant_ids.each do |restaurant_id|
+  REVIEWS_PER_RESTAURANT.times do
+    reviews << {
+      rating: rand(1..5),
+      content: Faker::Lorem.sentence(word_count: 20),
+      user_id: user_ids.sample,
+      restaurant_id: restaurant_id,
+      created_at: current_time,
+      updated_at: current_time
+    }
+  end
+end
+Review.insert_all(reviews)
+review_ids = Review.pluck(:id)
+
+# Insert Comments
+puts "Inserting comments..."
+comments = []
+review_ids.each do |review_id|
+  COMMENTS_PER_REVIEW.times do
+    comments << {
+      content: Faker::Lorem.sentence(word_count: 10),
+      user_id: user_ids.sample,
+      review_id: review_id,
+      created_at: current_time,
+      updated_at: current_time
+    }
+  end
+end
+Comment.insert_all(comments)
+
+# Insert Photos
+puts "Inserting photos..."
+photos = []
+current_time = Time.now
+
+restaurant_ids.each do |restaurant_id|
+  PHOTOS_PER_RESTAURANT.times do |i|
+    photos << {
+      primary: i == 0,
+      restaurant_id: restaurant_id,
+      created_at: current_time,
+      updated_at: current_time
+    }
+  end
+end
+# Bulk insert photos without attaching images
+Photo.insert_all(photos)
+# Now attach images after the photos are inserted
+photos = Photo.order(:id).last(restaurant_ids.size * PHOTOS_PER_RESTAURANT)
+photos.each_with_index do |photo, index|
+  # You can use a different image for each photo or repeat the same image
+  photo.image.attach(
+    io: File.open("./db/woodstock.webp"),
+    filename: "woodstock_#{index + 1}.webp",
+    content_type: 'image/webp'
   )
 end
-
-# Create Restaurants
-users.each do |user|
-  restaurants = 3.times.map do |i|
-    Restaurant.create!(
-      name: "Restaurant #{i + 1}",
-      address: "123 Main St",
-      city: "City #{i + 1}",
-      state: "State #{i + 1}",
-      zip: "12345",
-      description: "A great place to eat.",
-      phone_number: "123-456-7890",
-      website: "http://restaurant#{i + 1}.com",
-      user: user
-    )
-  end
-
-  # Create Dishes, Reviews, Comments, and Photos for each Restaurant
-  restaurants.each do |restaurant|
-    # Create Dishes
-    5.times do |i|
-      Dish.create!(
-        name: "Dish #{i + 1}",
-        description: "Delicious dish #{i + 1}",
-        price: (10 + i).to_f,
-        restaurant: restaurant
-      )
-    end
-
-    # Create Reviews
-    3.times do |i|
-      review = Review.create!(
-        rating: rand(1..5),
-        content: "Review content #{i + 1}",
-        user: users.sample,
-        restaurant: restaurant
-      )
-
-      # Create Comments for each Review
-      2.times do |j|
-        Comment.create!(
-          content: "Comment content #{j + 1}",
-          user: users.sample,
-          review: review
-        )
-      end
-    end
-
-    # Create Photos
-    2.times do |i|
-      Photo.create!(
-        image: File.open("./db/woodstock.webp"),
-        primary: i == 0,
-        restaurant: restaurant
-      )
-    end
-  end
-end
+puts "Photos inserted and images attached!"
 
 puts "Seeding completed!"
