@@ -16,7 +16,7 @@ gem "rails", "~> 7.1.2"
 
 gem "sprockets-rails"
 
-gem "pg", "~> 1.3.0"
+gem "pg", "~> 1.5.9"
 
 gem "faker", "~> 3.5.1"
 
