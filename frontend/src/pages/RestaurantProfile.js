@@ -131,11 +131,7 @@ function RestaurantProfile() {
           <Typography variant="h3" component="h1" gutterBottom>
             {restaurant.name}
           </Typography>
-          <EditButton
-            restaurantId={restaurant.id}
-            userId={restaurant.user_id}
-            currentUserId={user?.id}
-          />
+          
           <Box
             sx={{
               display: "flex",
@@ -156,6 +152,11 @@ function RestaurantProfile() {
               {reviews.length !== 1 ? "s" : ""})
             </Typography>
           </Box>
+          <EditButton
+            restaurantId={restaurant.id}
+            userId={restaurant.user_id}
+            currentUserId={user?.id}
+          />
         </Box>
         <Typography variant="body1" color="textSecondary" gutterBottom>
           {restaurant.address}, {restaurant.city}, {restaurant.state}{" "}
@@ -185,7 +186,12 @@ function RestaurantProfile() {
         <Typography variant="h4" gutterBottom>
           Photo Gallery
         </Typography>
-        <PhotoGallery photos={photos} />
+        <PhotoGallery
+          photos={photos}
+          restaurantId={id}
+          isOwner={restaurant?.user_id === user?.id}
+          onPhotosUpdate={fetchData}
+        />
       </Box>
 
       {/* Dishes List */}
