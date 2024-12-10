@@ -27,64 +27,74 @@
   <sessions>
     <session name="manage_restaurant_profile" probability="100" type="ts_http">
       <!-- Business Owner Login -->
-      <request subst="true">
-        <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
-        <http url="/api/login" method="POST" contents_from_file="./login.json">
-          <http_header name="Content-Type" value="application/json" />
-        </http>
-      </request>
-      <thinktime value="1" />
+      <transaction name="login">
+        <request subst="true">
+          <dyn_variable name="jwt" re='\"jwt\":\"([^\"]+)\"' />
+          <http url="/api/login" method="POST" contents_from_file="./login.json">
+            <http_header name="Content-Type" value="application/json" />
+          </http>
+        </request>
+      </transaction>
 
       <!-- Navigate to Business Dashboard (View All Restaurants) -->
-      <request>
-        <http url="/api/restaurants" method="GET">
-          <http_header name="Authorization" value="Bearer %%_jwt%%" />
-        </http>
-      </request>
-      <thinktime value="1" />
-
-      <for var="restaurant_id" from="1" to="15" incr="1">
+      <transaction name="dashboard">
         <request>
-          <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
+          <http url="/api/restaurants" method="GET">
             <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
-      </for>
+        <thinktime value="1" />
 
-      <!-- Create a New Restaurant -->
-      <request subst="true">
-        <dyn_variable name="id" re='\"id\":([0-9]+)' />
-        <http url="/api/restaurants" method="POST" contents_from_file="./create_restaurant.json">
-          <http_header name="Content-Type" value="application/json" />
-          <http_header name="Authorization" value="Bearer %%_jwt%%" />
-        </http>
-      </request>
+        <for var="restaurant_id" from="1" to="25" incr="1">
+          <request>
+            <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
+              <http_header name="Authorization" value="Bearer %%_jwt%%" />
+            </http>
+          </request>
+        </for>
+      </transaction>
+
       <thinktime value="1" />
 
-       <!-- View Specific Restaurant Details -->
-       <request subst="true">
-           <http url="/api/restaurants/%%_id%%" method="GET">
-           <http_header name="Authorization" value="Bearer %%_jwt%%" />
-           </http>
-       </request>
-       <thinktime value="1" />
+      <transaction name="create_restaurant">
+        <!-- Create a New Restaurant -->
+        <request subst="true">
+          <dyn_variable name="id" re='\"id\":([0-9]+)' />
+          <http url="/api/restaurants" method="POST" contents_from_file="./create_restaurant.json">
+            <http_header name="Content-Type" value="application/json" />
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+      </transaction>
 
-       <!-- Update Restaurant Information -->
-       <request subst="true">
-           <http url="/api/restaurants/%%_id%%" method="PUT" contents_from_file="./update_restaurant.json">
-           <http_header name="Content-Type" value="application/json" />
-           <http_header name="Authorization" value="Bearer %%_jwt%%" />
-           </http>
-       </request>
-       <thinktime value="1" />
-       <!-- Add Dishes to the Restaurant -->
-       <request subst="true">
-           <http url="/api/restaurants/%%_id%%/dishes" method="POST" contents_from_file="./add_dish.json">
-           <http_header name="Content-Type" value="application/json" />
-           <http_header name="Authorization" value="Bearer %%_jwt%%" />
-           </http>
-       </request>
-       <thinktime value="1" />
+      <transaction name="restaurant_profile">
+        <!-- View Specific Restaurant Details -->
+        <request subst="true">
+            <http url="/api/restaurants/%%_id%%" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+            </http>
+        </request>
+      </transaction>
+
+      <thinktime value="1" />
+      
+      <transaction name="update_restaurant">
+        <!-- Update Restaurant Information -->
+        <request subst="true">
+            <http url="/api/restaurants/%%_id%%" method="PUT" contents_from_file="./update_restaurant.json">
+            <http_header name="Content-Type" value="application/json" />
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+            </http>
+        </request>
+
+        <!-- Add Dishes to the Restaurant -->
+        <request subst="true">
+            <http url="/api/restaurants/%%_id%%/dishes" method="POST" contents_from_file="./add_dish.json">
+            <http_header name="Content-Type" value="application/json" />
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+            </http>
+        </request>
+      </transaction>
 
     </session>
   </sessions>

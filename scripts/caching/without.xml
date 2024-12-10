@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" []>
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" use_controller_vm="true" />
+  </clients>
+
+  <servers>
+    <server host="rails-to-riches.eba-viwn7vp8.us-west-2.elasticbeanstalk.com" port="80" type="tcp" />
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="60" unit="second">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="60" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="60" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="60" unit="second">
+      <users arrivalrate="8" unit="second"></users>
+    </arrivalphase>
+        <arrivalphase phase="5" duration="60" unit="second">
+      <users arrivalrate="16" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="6" duration="60" unit="second">
+      <users arrivalrate="32" unit="second"></users>
+    </arrivalphase>
+  </load>
+
+  <sessions>
+    <session name="home" probability="100" type="ts_http">
+      <transaction name="dashboard">
+        <!-- Access Dashboard -->
+        <request>
+          <http url="/api/restaurants_paged?page=1&amp;per_page=10" method="GET">
+          </http>
+        </request>
+
+        <for var="restaurant_id" from="1" to="10" incr="1">
+          <request>
+            <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
+            </http>
+          </request>
+        </for>
+
+        <for var="restaurant_id" from="1" to="10" incr="1">
+          <request>
+            <http url="/api/restaurants/%%_restaurant_id%%/reviews" method="GET">
+            </http>
+          </request>
+        </for>
+      </transaction>
+
+    </session>
+  </sessions>
+</tsung>
