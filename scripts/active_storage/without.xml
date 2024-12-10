@@ -22,17 +22,20 @@
     <arrivalphase phase="4" duration="60" unit="second">
       <users arrivalrate="8" unit="second"></users>
     </arrivalphase>
-        <arrivalphase phase="5" duration="60" unit="second">
+    <arrivalphase phase="5" duration="60" unit="second">
       <users arrivalrate="16" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="6" duration="60" unit="second">
       <users arrivalrate="32" unit="second"></users>
     </arrivalphase>
+    <arrivalphase phase="7" duration="60" unit="second">
+      <users arrivalrate="64" unit="second"></users>
+    </arrivalphase>
   </load>
 
   <sessions>
     <session name="home" probability="100" type="ts_http">
-      <transaction name="dashboard">
+      <!-- <transaction name="dashboard"> -->
         <!-- Access Dashboard -->
         <request>
           <http url="/api/restaurants_paged?page=1&amp;per_page=10" method="GET">
@@ -45,7 +48,7 @@
             </http>
           </request>
         </for>
-      </transaction>
+      <!-- </transaction> -->
 
     </session>
   </sessions>
