@@ -89,6 +89,13 @@ restaurant_ids.each do |restaurant_id|
 end
 Dish.insert_all(dishes)
 Review.insert_all(reviews)
+puts "Inserted #{Review.count} reviews in total."
+# Update restaurant ratings
+puts "Updating restaurant ratings..."
+Restaurant.find_each do |restaurant|
+  restaurant.update_ratings
+  puts "Restaurant ID #{restaurant.id} - Average Rating: #{restaurant.average_rating}, Total Reviews: #{restaurant.total_reviews}"
+end
 review_ids = Review.pluck(:id)
 
 review_ids.each do |review_id|
