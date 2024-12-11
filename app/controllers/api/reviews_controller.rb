@@ -12,7 +12,7 @@ module Api
     # GET /restaurants/:restaurant_id/reviews_paged?page=2&per_page=5
     def paged_index
       @restaurant = Restaurant.find(params[:restaurant_id])
-      @reviews = @restaurant.reviews.includes(:comments).page(params[:page]).per(params[:per_page] || 5)
+      @reviews = @restaurant.reviews.page(params[:page]).per(params[:per_page] || 5)
   
       render json: {
         reviews: @reviews.as_json(include: :comments),
