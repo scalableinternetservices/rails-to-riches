@@ -2,88 +2,44 @@
 <!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" []>
 <tsung loglevel="notice">
   <clients>
-    <client host="localhost" use_controller_vm="true" />
+    <client host="localhost" use_controller_vm="true" maxusers="10000" />
   </clients>
   <servers>
     <server host="rails-to-riches.eba-viwn7vp8.us-west-2.elasticbeanstalk.com" port="80" type="tcp" />
   </servers>
   <load>
     <arrivalphase phase="1" duration="60" unit="second">
-      <users arrivalrate="1" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="2" duration="60" unit="second">
-      <users arrivalrate="2" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="3" duration="60" unit="second">
-      <users arrivalrate="4" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="4" duration="60" unit="second">
-      <users arrivalrate="8" unit="second"></users>
-    </arrivalphase>
-    <arrivalphase phase="5" duration="60" unit="second">
       <users arrivalrate="16" unit="second"></users>
     </arrivalphase>
-    <arrivalphase phase="6" duration="60" unit="second">
+    <arrivalphase phase="2" duration="60" unit="second">
       <users arrivalrate="32" unit="second"></users>
     </arrivalphase>
-    <arrivalphase phase="7" duration="60" unit="second">
+    <arrivalphase phase="3" duration="60" unit="second">
       <users arrivalrate="64" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="60" unit="second">
+      <users arrivalrate="128" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="60" unit="second">
+      <users arrivalrate="256" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="6" duration="60" unit="second">
+      <users arrivalrate="512" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="7" duration="60" unit="second">
+      <users arrivalrate="1024" unit="second"></users>
     </arrivalphase>
   </load>
   <sessions>
     <session name="browse_restaurants" probability="100" type="ts_http">
 
       <!-- Access Dashboard -->
-      <!-- <transaction name="dashboard"> -->
+      <transaction name="dashboard">
         <request>
-          <http url="/api/restaurants_paged?page=1&amp;per_page=10" method="GET">
+          <http url="/api/restaurants_paged?page=1&amp;per_page=25" method="GET">
           </http>
         </request>
-        <!-- <for var="restaurant_id" from="1" to="10" incr="1">
-          <request>
-            <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
-            </http>
-          </request>
-        </for> -->
-      <!-- </transaction> -->
-
-      <thinktime value="1" />
-
-      <!-- Loop over known restaurant IDs -->
-      <for var="restaurant_id" from="1" to="25" incr="1">
-      
-        <!-- View Specific Restaurant Details -->
-        <!-- <transaction name="restaurant_profile"> -->
-          <request subst="true">
-            <http url="/api/restaurants/%%_restaurant_id%%" method="GET">
-            </http>
-          </request>
-          <!-- View Dishes for the Restaurant -->
-          <request subst="true">
-            <http url="/api/restaurants/%%_restaurant_id%%/dishes" method="GET">
-            </http>
-          </request>
-          <!-- View Reviews for the Restaurant -->
-          <request subst="true">
-            <http url="/api/restaurants/%%_restaurant_id%%/reviews_paged?page=1&amp;per_page=10" method="GET">
-            </http>
-          </request>
-          <!-- View Comments for a Specific Review -->
-          <for var="review_id" from="1" to="10" incr="1">
-            <request subst="true">
-              <http url="/api/restaurants/%%_restaurant_id%%/reviews/%%_review_id%%/comments_paged?page=1&amp;per_page=10" method="GET">
-              </http>
-            </request>
-          </for>
-          <!-- View Photos for the Restaurant -->
-          <request>
-            <http url="/api/restaurants/%%_restaurant_id%%/photos" method="GET">
-            </http>
-          </request>
-        <!-- </transaction> -->
-
-        <thinktime value="1" />
-      </for>
+      </transaction>
     </session>
   </sessions>
 </tsung>

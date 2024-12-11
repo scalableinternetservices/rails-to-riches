@@ -48,7 +48,7 @@
             <thinktime value="1" />
 
             <!-- Access Dashboard -->
-            <request>
+            <request subst="true">
                 <http url="/api/restaurants_paged?page=1&amp;per_page=10" method="GET">
                     <http_header name="Authorization" value="Bearer %%_jwt%%" />
                 </http>
@@ -57,7 +57,7 @@
 
             <!-- Browse Restaurants' Primary Photos -->
             <for var="restaurant_id" from="1" to="15" incr="1">
-                <request>
+                <request subst="true">
                     <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
                         <http_header name="Authorization" value="Bearer %%_jwt%%" />
                     </http>
@@ -83,7 +83,7 @@
             </request>
 
             <for var="restaurant_id" from="1" to="10" incr="1">
-                <request>
+                <request subst="true">
                     <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
                     </http>
                 </request>
@@ -102,7 +102,7 @@
             <thinktime value="1" />
 
             <!-- View All Restaurants -->
-            <request>
+            <request subst="true">
                 <http url="/api/restaurants" method="GET">
                     <http_header name="Authorization" value="Bearer %%_jwt%%" />
                 </http>
@@ -111,7 +111,7 @@
 
             <!-- Browse Restaurants' Primary Photos -->
             <for var="restaurant_id" from="1" to="15" incr="1">
-                <request>
+                <request subst="true">
                     <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
                         <http_header name="Authorization" value="Bearer %%_jwt%%" />
                     </http>
@@ -161,7 +161,7 @@
         <!-- 4. Browse Restaurants -->
         <session name="browse_restaurants" probability="20" type="ts_http">
             <!-- Access Dashboard -->
-            <request>
+            <request subst="true">
                 <http url="/api/restaurants" method="GET">
                     <http_header name="Authorization" value="Bearer %%_jwt%%" />
                 </http>
@@ -170,7 +170,7 @@
 
             <!-- Browse Restaurants' Primary Photos -->
             <for var="restaurant_id" from="1" to="15" incr="1">
-                <request>
+                <request subst="true">
                     <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET" />
                 </request>
             </for>
@@ -197,7 +197,7 @@
                         </http>
                     </request>
                     <!-- View Photos for the Restaurant -->
-                    <request>
+                    <request subst="true">
                         <http url="/api/restaurants/%%_restaurant_id%%/photos" method="GET">
                         </http>
                     </request>
@@ -234,7 +234,7 @@
             </request>
 
             <!-- View Photos for the Restaurant -->
-            <request>
+            <request subst="true">
                 <http url="/api/restaurants/1/photos" method="GET">
                     <http_header name="Authorization" value="Bearer %%_jwt%%" />
                 </http>
@@ -296,7 +296,7 @@
             </request>
 
             <!-- View Photos for the Restaurant -->
-            <request>
+            <request subst="true">
                 <http url="/api/restaurants/1/photos" method="GET">
                     <http_header name="Authorization" value="Bearer %%_jwt%%" />
                 </http>
