@@ -13,6 +13,7 @@ const api = axios.create({
 if (process.env.REACT_APP_RAILS_ENDPOINT) {
   api.defaults.baseURL = process.env.REACT_APP_RAILS_ENDPOINT;
 }
+api.defaults.baseURL = "http://rails-to-riches-v1.eba-viwn7vp8.us-west-2.elasticbeanstalk.com"
 
 // Function to set or remove the Authorization header
 export const setAuthToken = (token) => {
