@@ -12,9 +12,15 @@ module Api
     # GET /restaurants_paged
     # GET /restaurants_paged?page=2&per_page=5
     def paged_index
-      @restaurants = Restaurant.page(params[:page]).per(params[:per_page] || 10)
+      @restaurants = Restaurant
+        .select("restaurants.*, COALESCE(AVG(reviews.rating), 0) AS average_rating")
+        .joins("LEFT JOIN reviews ON reviews.restaurant_id = restaurants.id")
+        .group("restaurants.id")
+        .page(params[:page])
+        .per(params[:per_page] || 10)
+    
       render json: {
-        restaurants: @restaurants,
+        restaurants: @restaurants.as_json(methods: :average_rating),
         current_page: @restaurants.current_page,
         total_pages: @restaurants.total_pages,
         total_count: @restaurants.total_count
