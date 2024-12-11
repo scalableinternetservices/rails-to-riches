@@ -7,7 +7,7 @@ import Profile from "./pages/Profile";
 import Review from "./pages/Review";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
-import CreateRestaurant from "./pages/CreateRestaurant";
+import RestaurantForm from "./pages/RestaurantForm";
 import RestaurantProfile from "./pages/RestaurantProfile";
 
 // Wrapper component to include Navbar
@@ -58,11 +58,21 @@ function App() {
           }
         />
         <Route
-          path="/createRestaurant"
+          path="/restaurants/new"
           element={
             <PrivateRoute>
               <PageWithNavbar>
-                <CreateRestaurant />
+                <RestaurantForm />
+              </PageWithNavbar>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/restaurants/:id/edit"
+          element={
+            <PrivateRoute>
+              <PageWithNavbar>
+                <RestaurantForm />
               </PageWithNavbar>
             </PrivateRoute>
           }

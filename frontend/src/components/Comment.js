@@ -5,34 +5,51 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid2";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import { createComment } from "../services/api";
+import { createComment, updateComment } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-export default function Comment({ reviewId, onCommentSubmitted }) {
+export default function Comment({
+  reviewId,
+  initialComment,
+  isEditing,
+  onCancel,
+  onCommentSubmitted,
+}) {
   const { id } = useParams();
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [comment, setComment] = useState('');
+  const [isAnonymous, setIsAnonymous] = useState(
+    initialComment?.anonymous || false
+  );
+  const [comment, setComment] = useState(initialComment?.content || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
     try {
       setIsSubmitting(true);
-      const response = await createComment(id, reviewId, { content: comment, anonymous: isAnonymous });
-      if (response.status === 201) {
-        // Clear input fields
-        setComment('');
+      let response;
+      if (isEditing) {
+        response = await updateComment(initialComment.id, {
+          content: comment,
+          anonymous: isAnonymous,
+        });
+      } else {
+        response = await createComment(id, reviewId, {
+          content: comment,
+          anonymous: isAnonymous,
+        });
+      }
+
+      if (response.status === 200 || response.status === 201) {
+        setComment("");
         setIsAnonymous(false);
-        // Trigger data refresh
         if (onCommentSubmitted) {
           onCommentSubmitted();
         }
-      } else {
-        console.error('Failed to submit comment');
+        if (onCancel) onCancel();
       }
     } catch (error) {
-      console.error('Error submitting comment:', error);
+      console.error("Error submitting comment:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -67,6 +84,13 @@ export default function Comment({ reviewId, onCommentSubmitted }) {
               Submit Comment
             </Button>
           </Grid>
+          {isEditing && (
+            <Grid size={12}>
+              <Button onClick={onCancel} variant="outlined" sx={{ ml: 1 }}>
+                Cancel
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Typography>
     </Box>

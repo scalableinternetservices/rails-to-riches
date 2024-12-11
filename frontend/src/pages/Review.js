@@ -7,16 +7,23 @@ import StarIcon from "@mui/icons-material/Star";
 import Grid from "@mui/material/Grid2";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import { createReview } from "../services/api";
+import { createReview, updateReview } from "../services/api";
 import LinearProgressBar from "../components/LinearProgressBar";
 import BasicDialog from "../components/BasicDialog";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-export default function Review({handleFetchReviews}) {
+export default function Review({
+  initialReview,
+  isEditing,
+  onCancel,
+  handleFetchReviews,
+}) {
   const { id } = useParams();
-  const [rating, setRating] = useState(0);
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [content, setContent] = useState();
+  const [rating, setRating] = useState(initialReview?.rating || 0);
+  const [isAnonymous, setIsAnonymous] = useState(
+    initialReview?.anonymous || false
+  );
+  const [content, setContent] = useState(initialReview?.content || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = React.useState(false);
 
@@ -24,18 +31,28 @@ export default function Review({handleFetchReviews}) {
     event.preventDefault();
     try {
       setIsSubmitting(true);
-      const response = await createReview(id, {
-        rating: rating,
-        content: content,
-        anonymous: isAnonymous
-      });
-      if (response.status === 201) {
+      let response;
+      if (isEditing) {
+        response = await updateReview(initialReview.id, {
+          rating,
+          content,
+          anonymous: isAnonymous,
+        });
+      } else {
+        response = await createReview(id, {
+          rating,
+          content,
+          anonymous: isAnonymous,
+        });
+      }
+
+      if (response.status === 200 || response.status === 201) {
         setOpen(true);
         handleFetchReviews();
-      } else {
+        if (onCancel) onCancel();
       }
     } catch (error) {
-      setIsSubmitting(true);
+      console.error("Error submitting review:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -88,6 +105,13 @@ export default function Review({handleFetchReviews}) {
                 Submit Review
               </Button>
             </Grid>
+            {isEditing && (
+              <Grid size={12}>
+                <Button onClick={onCancel} variant="outlined" sx={{ ml: 1 }}>
+                  Cancel
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Typography>
         <BasicDialog

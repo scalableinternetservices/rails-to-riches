@@ -1,6 +1,6 @@
 module Api
   class CommentsController < ApplicationController
-    skip_before_action :authorize_request, only: [:show, :index]
+    skip_before_action :authorize_request, only: [:show, :index, :paged_index]
 
     # GET /restaurants/:restaurant_id/reviews/:review_id/comments
     def index

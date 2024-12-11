@@ -1,7 +1,7 @@
 module Api
   class RestaurantsController < ApplicationController
     before_action :authorize_business_owner, only: [:create, :update, :destroy]
-    skip_before_action :authorize_request, only: [:show, :index]
+    skip_before_action :authorize_request, only: [:show, :index, :paged_index]
 
     # GET /restaurants
     def index

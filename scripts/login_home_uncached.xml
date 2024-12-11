@@ -22,6 +22,12 @@
     <arrivalphase phase="4" duration="60" unit="second">
       <users arrivalrate="8" unit="second"></users>
     </arrivalphase>
+        <arrivalphase phase="5" duration="60" unit="second">
+      <users arrivalrate="16" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="6" duration="60" unit="second">
+      <users arrivalrate="32" unit="second"></users>
+    </arrivalphase>
   </load>
 
   <sessions>
@@ -43,9 +49,17 @@
       </request>
       <thinktime value="1" />
 
-      <for var="restaurant_id" from="1" to="15" incr="1">
+      <for var="restaurant_id" from="1" to="25" incr="1">
         <request>
           <http url="/api/restaurants/%%_restaurant_id%%/primary_photo" method="GET">
+            <http_header name="Authorization" value="Bearer %%_jwt%%" />
+          </http>
+        </request>
+      </for>
+
+      <for var="restaurant_id" from="1" to="25" incr="1">
+        <request>
+          <http url="/api/restaurants/%%_restaurant_id%%/reviews" method="GET">
             <http_header name="Authorization" value="Bearer %%_jwt%%" />
           </http>
         </request>
