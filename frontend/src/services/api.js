@@ -69,8 +69,13 @@ export const deleteUser = (id) => {
 };
 
 // List Restaurants
-export const listRestaurants = () => {
+export const listRestaurantsNoPagination = () => {
   return api.get("/api/restaurants");
+};
+
+// Updated API method
+export const listRestaurants = (page = 1, perPage = 10) => {
+  return api.get(`/api/restaurants_paged?page=${page}&per_page=${perPage}`);
 };
 
 // Create Restaurant
