@@ -37,6 +37,17 @@ module RailsToRiches
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'https://shanmukhasahiti.github.io'
+        
+        resource '/api/*',
+          headers: :any,
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          credentials: true
+      end
+    end
     
   end
 end

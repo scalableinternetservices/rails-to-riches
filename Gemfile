@@ -12,6 +12,8 @@ gem "jwt"
 
 gem 'kaminari'
 
+gem 'rack-cors'
+
 gem "rails", "~> 7.1.2"
 
 gem "sprockets-rails"
