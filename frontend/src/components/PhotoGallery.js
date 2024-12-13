@@ -43,7 +43,7 @@ function PhotoGallery({ photos, restaurantId, isOwner, onPhotosUpdate }) {
     setIsSubmitting(true);
     try {
       await Promise.all(
-        photosToDelete.map((photoId) => deletePhoto(restaurantId, photoId))
+        photosToDelete.map((photoId) => deletePhoto(photoId))
       );
       onPhotosUpdate();
       setPhotosToDelete([]);
