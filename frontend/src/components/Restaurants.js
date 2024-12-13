@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../AuthContext";
 import {
   Box,
   TextField,
@@ -13,12 +14,15 @@ import {
   Select,
   MenuItem,
   FormControl,
+  Chip,
 } from "@mui/material";
+import { Store as StoreIcon } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import LinearProgressBar from "../components/LinearProgressBar";
 import { listRestaurants, fetchPrimaryPhoto } from "../services/api";
 
 function Restaurants() {
+  const { user } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [restaurants, setRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
@@ -74,8 +78,8 @@ function Restaurants() {
 
   const handlePerPageChange = (event) => {
     setPerPage(event.target.value);
-    setCurrentPage(1); 
-  }
+    setCurrentPage(1);
+  };
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
@@ -85,7 +89,6 @@ function Restaurants() {
         restaurant.name.toLowerCase().includes(query)
       )
     );
-    // setCurrentPage(1);
   };
 
   return (
@@ -161,8 +164,24 @@ function Restaurants() {
                     height: "100%",
                     display: "flex",
                     flexDirection: "column",
+                    position: "relative"
                   }}
                 >
+                  {user && user.id === restaurant.user_id && (
+                    <Chip
+                      icon={<StoreIcon sx={{ fontSize: 20 }} />}
+                      label="My Restaurant"
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        zIndex: 1,
+                        color: "black",
+                        backgroundColor: "white"
+                      }}
+                    />
+                  )}
                   <CardMedia
                     component="img"
                     height="200"
