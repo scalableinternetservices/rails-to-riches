@@ -187,12 +187,14 @@ function ReviewsList({ reviews, fetchReviews }) {
                 ))}
               </Box>
             )}
-            <Link
-              onClick={() => handleToggleComment(review.id)}
-              component="button"
-            >
-              Reply
-            </Link>
+            {user?.id && (
+              <Link
+                onClick={() => handleToggleComment(review.id)}
+                component="button"
+              >
+                Reply
+              </Link>
+            )}
             {openComments[review.id] && !editingComment && (
               <Comment reviewId={review.id} onCommentSubmitted={fetchReviews} />
             )}

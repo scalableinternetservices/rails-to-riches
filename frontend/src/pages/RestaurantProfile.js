@@ -137,20 +137,6 @@ function RestaurantProfile() {
               <Delete fontSize="small" color="error" />
             </IconButton>
           </Tooltip>
-          {/* <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate(`/restaurants/${restaurantId}/edit`)}
-          >
-            Edit Restaurant
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => setDeleteDialogOpen(true)}
-          >
-            Delete Restaurant
-          </Button> */}
         </Box>
 
         <ConfirmDialog
@@ -260,7 +246,7 @@ function RestaurantProfile() {
         </Typography>
         <ReviewsList reviews={reviews} fetchReviews={fetchData} />
       </Box>
-      {user?.id !== restaurant?.user_id && (
+      {user?.id && user?.id !== restaurant?.user_id && (
         <Box sx={{ mb: 4 }}>
           <Review handleFetchReviews={fetchData} />
         </Box>
