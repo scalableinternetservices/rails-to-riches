@@ -21,6 +21,7 @@ import { listRestaurants, fetchPrimaryPhoto } from "../services/api";
 function Restaurants() {
   const [searchQuery, setSearchQuery] = useState("");
   const [restaurants, setRestaurants] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
@@ -53,6 +54,7 @@ function Restaurants() {
       );
 
       setRestaurants(restaurantsWithPhotos);
+      setFilteredRestaurants(restaurantsWithPhotos);
       setTotalPages(response.data.total_pages);
       setTotalCount(response.data.total_count);
       setLoading(false);
@@ -78,7 +80,12 @@ function Restaurants() {
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-    setCurrentPage(1);
+    setFilteredRestaurants(
+      restaurants.filter((restaurant) =>
+        restaurant.name.toLowerCase().includes(query)
+      )
+    );
+    // setCurrentPage(1);
   };
 
   return (
@@ -143,7 +150,7 @@ function Restaurants() {
 
         {/* Restaurant Cards Grid */}
         <Grid container spacing={3} mt={1}>
-          {restaurants.map((restaurant) => (
+          {filteredRestaurants.map((restaurant) => (
             <Grid item xs={12} sm={6} md={4} key={restaurant.id}>
               <Link
                 to={`/restaurants/${restaurant.id}`}
